@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Bumdes as BumdesModel;
+use App\Models\Transaksi as TransaksiModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -45,5 +46,10 @@ class UnitUsaha extends Model
     public function pelanggan(): HasMany
     {
         return $this->hasMany(Pelanggan::class, 'id_unit', 'id_unit');
+    }
+
+    public function transaksi(): HasMany
+    {
+        return $this->hasMany(TransaksiModel::class, 'id_unit', 'id_unit');
     }
 }

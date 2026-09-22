@@ -273,7 +273,15 @@ feat(auth): tambah akun dan rbac sembilan role
 feat(database): tambah pelanggan dan relasi portal
 ```
 
-**Checkpoint berikutnya:** migration, model, seeder, dan test untuk `transaksi`, termasuk tipe input/output, detail JSON, pencatat akun, dan relasi unit usaha.
+**Checkpoint 6 (22 September 2026):** migration `transaksi`, model `Transaksi`, relasi transaksi ke `UnitUsaha` dan akun pencatat, serta `TransaksiSeeder` selesai. Seeder membuat input dan output untuk 10 unit, total 20 transaksi; `detail` memakai JSON fleksibel sesuai isu FGD dan ID seed dibuat deterministik untuk idempotensi. Diagnostics, `php -l`, dan Laravel Pint bersih; seluruh test lulus 8 test/39 assertions. Migration dijalankan tanpa `--force`.
+
+**Commit:**
+
+```
+feat(database): tambah transaksi dan relasi pencatat
+```
+
+**Checkpoint berikutnya:** migration, model, seeder, dan test untuk `tagihan`, termasuk status pembayaran, metode tunai/transfer, dan relasi pelanggan-unit.
 
 **Commit:**
 
