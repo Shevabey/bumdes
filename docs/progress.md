@@ -289,7 +289,15 @@ feat(database): tambah transaksi dan relasi pencatat
 feat(database): tambah tagihan dan status pembayaran
 ```
 
-**Checkpoint berikutnya:** migration, model, seeder, dan test untuk `iuran_bumdes`, termasuk iuran Rp50.000 per BUMDes dan status verifikasi koordinator.
+**Checkpoint 8 (22 September 2026):** migration `iuran_bumdes`, model `IuranBumdes`, relasi ke BUMDes dan akun verifikator, serta `IuranBumdesSeeder` selesai. Seeder membuat iuran bulan `2026-09` untuk dua BUMDes dengan total Rp100.000: satu lunas dari kas secara tunai dan satu menunggu verifikasi dari luar kas melalui transfer dengan bukti pembayaran. Diagnostics, `php -l`, dan Laravel Pint bersih; seluruh test lulus 10 test/57 assertions. Migration dijalankan tanpa `--force`.
+
+**Commit:**
+
+```
+feat(database): tambah iuran bumdes dan verifikasi koordinator
+```
+
+**Checkpoint berikutnya:** migration, model, seeder, dan test untuk `kas_bumdes` serta `kas_mutasi`, sebagai fondasi saldo dan mutasi referral/iuran.
 
 **Commit:**
 

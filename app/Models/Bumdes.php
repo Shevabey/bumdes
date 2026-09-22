@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\IuranBumdes as IuranBumdesModel;
 use App\Models\Region as RegionModel;
 use App\Models\UnitUsaha as UnitUsahaModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -45,5 +46,10 @@ class Bumdes extends Model
     public function units(): HasMany
     {
         return $this->hasMany(UnitUsahaModel::class, 'id_bumdes', 'id_bumdes');
+    }
+
+    public function iuran(): HasMany
+    {
+        return $this->hasMany(IuranBumdesModel::class, 'id_bumdes', 'id_bumdes');
     }
 }
