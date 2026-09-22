@@ -9,19 +9,19 @@
 
 ## 1. Status Ringkas
 
-| Aspek                                                       | Status                                               |
-| ----------------------------------------------------------- | ---------------------------------------------------- |
-| Dokumen resmi (PRD, architecture, dbml, api-spec, progress) | 🟢 Seluruhnya sinkron (v2.1/v2.0)                    |
-| Setup environment development (Laragon)                     | 🟢 Fondasi Laravel, paket, migration & asset selesai |
-| Migration & Model                                           | ⚪ Belum dimulai                                     |
-| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | ⚪ Belum dimulai                                     |
-| Portal Pengguna                                             | ⚪ Belum dimulai                                     |
-| Feedback & Notifikasi Real-time (Reverb)                    | ⚪ Belum dimulai                                     |
-| Ekspor Laporan                                              | ⚪ Belum dimulai                                     |
-| Uji Coba Internal                                           | ⚪ Belum dimulai                                     |
-| UAT dengan pengurus BUMDes riil                             | ⚪ Belum dimulai                                     |
-| Deployment Fase Awal (tanpa Docker)                         | ⚪ Belum dimulai                                     |
-| Deployment Fase Lanjutan (Docker)                           | ⚪ Belum dimulai (sengaja ditunda)                   |
+| Aspek                                                       | Status                                                     |
+| ----------------------------------------------------------- | ---------------------------------------------------------- |
+| Dokumen resmi (PRD, architecture, dbml, api-spec, progress) | 🟢 Seluruhnya sinkron (v2.1/v2.0)                          |
+| Setup environment development (Laragon)                     | 🟢 Fondasi Laravel, paket, migration & asset selesai       |
+| Migration & Model                                           | 🟡 Region dan BUMDes selesai; entitas domain berikutnya belum dimulai |
+| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | ⚪ Belum dimulai                                           |
+| Portal Pengguna                                             | ⚪ Belum dimulai                                           |
+| Feedback & Notifikasi Real-time (Reverb)                    | ⚪ Belum dimulai                                           |
+| Ekspor Laporan                                              | ⚪ Belum dimulai                                           |
+| Uji Coba Internal                                           | ⚪ Belum dimulai                                           |
+| UAT dengan pengurus BUMDes riil                             | ⚪ Belum dimulai                                           |
+| Deployment Fase Awal (tanpa Docker)                         | ⚪ Belum dimulai                                           |
+| Deployment Fase Lanjutan (Docker)                           | ⚪ Belum dimulai (sengaja ditunda)                         |
 
 Legenda: ⚪ Belum dimulai · 🟡 Sedang berjalan/sebagian · 🟢 Selesai
 
@@ -238,6 +238,16 @@ php artisan migrate:fresh --seed
 ```
 
 **Checklist:** tabel `region` berisi hierarki provinsi→kelurahan Kec. Minggir dengan kode Kemendagri benar; tabel `roles` berisi 9 baris.
+
+**Checkpoint 1 (22 September 2026):** migration `region`, model `Region` dengan relasi `parent`/`children`, dan `RegionSeeder` untuk DI Yogyakarta → Kabupaten Sleman → Kecamatan Minggir → Sendangrejo/Sendangsari selesai. Sendangsari ditandai sebagai koordinator. `RegionTest` lulus 1 test/5 assertions; seeder sudah diuji dua kali tanpa duplikasi. Migration dijalankan tanpa `--force`.
+
+**Checkpoint 2 (22 September 2026):** migration `bumdes`, model `Bumdes` dengan relasi `kelurahan`, dan `BumdesSeeder` untuk dua BUMDes fase-1 (`BMD-SDS-001` dan `BMD-SDR-001`) selesai. Foreign key `id_kelurahan` menjaga relasi ke tabel `region`; seeder sudah diuji idempotent. Diagnostics dan `php -l` seluruh file checkpoint bersih; seluruh test lulus 4 test/13 assertions. Migration dijalankan tanpa `--force`.
+
+**Commit:**
+
+```
+feat(database): tambah migration model dan seeder bumdes
+```
 
 **Commit:**
 
