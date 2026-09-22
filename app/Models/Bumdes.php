@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Models\IuranBumdes as IuranBumdesModel;
+use App\Models\KasBumdes as KasBumdesModel;
 use App\Models\Region as RegionModel;
 use App\Models\UnitUsaha as UnitUsahaModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Bumdes extends Model
 {
@@ -51,5 +53,10 @@ class Bumdes extends Model
     public function iuran(): HasMany
     {
         return $this->hasMany(IuranBumdesModel::class, 'id_bumdes', 'id_bumdes');
+    }
+
+    public function kas(): HasOne
+    {
+        return $this->hasOne(KasBumdesModel::class, 'id_bumdes', 'id_bumdes');
     }
 }

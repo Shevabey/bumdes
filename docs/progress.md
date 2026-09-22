@@ -297,7 +297,15 @@ feat(database): tambah tagihan dan status pembayaran
 feat(database): tambah iuran bumdes dan verifikasi koordinator
 ```
 
-**Checkpoint berikutnya:** migration, model, seeder, dan test untuk `kas_bumdes` serta `kas_mutasi`, sebagai fondasi saldo dan mutasi referral/iuran.
+**Checkpoint 9 (22 September 2026):** migration `kas_bumdes` dan `kas_mutasi`, model `KasBumdes`/`KasMutasi`, relasi ke BUMDes, serta `KasSeeder` selesai. Seeder membuat 2 kas dengan total saldo Rp400.000 dan 3 mutasi deterministik, termasuk mutasi keluar sumber iuran. Diagnostics, `php -l`, dan Laravel Pint bersih; seluruh test lulus 11 test/65 assertions. Migration dijalankan tanpa `--force`.
+
+**Commit:**
+
+```
+feat(database): tambah kas bumdes dan mutasi kas
+```
+
+**Checkpoint berikutnya:** migration, model, seeder, dan test untuk `referral`, termasuk kode aktif 5 hari, redeem, status pending/cair/gagal, dan batas verifikasi 15 hari.
 
 **Commit:**
 
