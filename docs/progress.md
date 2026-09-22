@@ -9,19 +9,19 @@
 
 ## 1. Status Ringkas
 
-| Aspek                                                       | Status                             |
-| ----------------------------------------------------------- | ---------------------------------- |
-| Dokumen resmi (PRD, architecture, dbml, api-spec, progress) | 🟢 Seluruhnya sinkron (v2.1/v2.0)  |
-| Setup environment development (Laragon)                     | 🟢 Fondasi Laravel, paket, migration & asset selesai          |
-| Migration & Model                                           | ⚪ Belum dimulai                   |
-| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | ⚪ Belum dimulai                   |
-| Portal Pengguna                                             | ⚪ Belum dimulai                   |
-| Feedback & Notifikasi Real-time (Reverb)                    | ⚪ Belum dimulai                   |
-| Ekspor Laporan                                              | ⚪ Belum dimulai                   |
-| Uji Coba Internal                                           | ⚪ Belum dimulai                   |
-| UAT dengan pengurus BUMDes riil                             | ⚪ Belum dimulai                   |
-| Deployment Fase Awal (tanpa Docker)                         | ⚪ Belum dimulai                   |
-| Deployment Fase Lanjutan (Docker)                           | ⚪ Belum dimulai (sengaja ditunda) |
+| Aspek                                                       | Status                                               |
+| ----------------------------------------------------------- | ---------------------------------------------------- |
+| Dokumen resmi (PRD, architecture, dbml, api-spec, progress) | 🟢 Seluruhnya sinkron (v2.1/v2.0)                    |
+| Setup environment development (Laragon)                     | 🟢 Fondasi Laravel, paket, migration & asset selesai |
+| Migration & Model                                           | ⚪ Belum dimulai                                     |
+| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | ⚪ Belum dimulai                                     |
+| Portal Pengguna                                             | ⚪ Belum dimulai                                     |
+| Feedback & Notifikasi Real-time (Reverb)                    | ⚪ Belum dimulai                                     |
+| Ekspor Laporan                                              | ⚪ Belum dimulai                                     |
+| Uji Coba Internal                                           | ⚪ Belum dimulai                                     |
+| UAT dengan pengurus BUMDes riil                             | ⚪ Belum dimulai                                     |
+| Deployment Fase Awal (tanpa Docker)                         | ⚪ Belum dimulai                                     |
+| Deployment Fase Lanjutan (Docker)                           | ⚪ Belum dimulai (sengaja ditunda)                   |
 
 Legenda: ⚪ Belum dimulai · 🟡 Sedang berjalan/sebagian · 🟢 Selesai
 
@@ -365,7 +365,7 @@ VPS Ubuntu 22.04 + Nginx + PHP-FPM + MySQL terinstal langsung, Supervisor untuk 
 
 ## 9. Checklist Menyeluruh (Rekap Semua Fase)
 
-- [x] Bab 4 — Setup Laragon, project Laravel, database, package (RBAC, activity log, excel, **Reverb**), asset frontend *(PHP 8.3, database `bumdes`, migration dasar + package, Reverb config, Echo/Pusher, storage link, dan `npm run build` tervalidasi)*
+- [x] Bab 4 — Setup Laragon, project Laravel, database, package (RBAC, activity log, excel, **Reverb**), asset frontend _(PHP 8.3, database `bumdes`, migration dasar + package, Reverb config, Echo/Pusher, storage link, dan `npm run build` tervalidasi)_
 - [ ] Bab 5 — Migration 12 tabel (skema Kemendagri untuk region), Model, Seeder
 - [ ] Bab 6.1-6.2 — Policy RBAC, Service Layer (Referral, Iuran, Tagihan, Report)
 - [ ] Bab 6.3 — Scheduled Command (iuran, referral expire/verify)
@@ -386,6 +386,6 @@ VPS Ubuntu 22.04 + Nginx + PHP-FPM + MySQL terinstal langsung, Supervisor untuk 
 | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 17 September 2026          | Dibuat pertama kali sebagai pelacak status terpisah dari setup guide                                                                                                                                                                                                                                              |
 | 17 September 2026 (revisi) | **Digabung total** dengan isi `SETUP_GUIDE.md`, `SETUP_GUIDE_LANJUTAN.md`, `SETUP_GUIDE_3.md`, dan `UJI_COBA_END_TO_END.md` menjadi satu dokumen; keempat file tersebut **tidak dipakai lagi**. Proyek kini hanya memakai 5 dokumen resmi: PRD, architecture, progress (ini), database-schema.dbml, api-spec.json |
-| 22 September 2026 | Dependensi fondasi terpasang: Livewire 3.8.9, Spatie Permission 6.25, Activitylog 4.12, Laravel Excel 3.1, dan Reverb 1.11. Database `bumdes` terdeteksi tetapi masih fresh; publish, migration, dan build asset menjadi checkpoint berikutnya. |
-| 22 September 2026 | Setup fondasi selesai: tabel migration, permission, activity log, dan session berhasil dibuat; konfigurasi broadcast diarahkan ke Reverb, filesystem ke public, storage link dibuat, dan Vite production build berhasil. |
-| 22 September 2026 | Verifikasi checkpoint setup lulus: `php artisan test` menghasilkan 2 test lulus (2 assertions); `php artisan migrate` tidak memiliki migration tertunda. |
+| 22 September 2026          | Dependensi fondasi terpasang: Livewire 3.8.9, Spatie Permission 6.25, Activitylog 4.12, Laravel Excel 3.1, dan Reverb 1.11. Database `bumdes` terdeteksi tetapi masih fresh; publish, migration, dan build asset menjadi checkpoint berikutnya.                                                                   |
+| 22 September 2026          | Setup fondasi selesai: tabel migration, permission, activity log, dan session berhasil dibuat; konfigurasi broadcast diarahkan ke Reverb, filesystem ke public, storage link dibuat, dan Vite production build berhasil.                                                                                          |
+| 22 September 2026          | Verifikasi checkpoint setup lulus: `php artisan test` menghasilkan 2 test lulus (2 assertions); `php artisan migrate` tidak memiliki migration tertunda.                                                                                                                                                          |
