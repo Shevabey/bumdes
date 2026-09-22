@@ -257,7 +257,15 @@ feat(database): tambah migration model dan seeder bumdes
 feat(database): tambah migration model dan seeder unit usaha
 ```
 
-**Checkpoint berikutnya:** migration, model, seeder, dan test untuk `akun`, termasuk pemetaan 9 role sesuai PRD serta fondasi autentikasi username.
+**Checkpoint 4 (22 September 2026):** migration `akun`, model `Akun` sebagai authenticatable berbasis `username` dan `password_hash`, konfigurasi provider auth diarahkan ke `App\Models\Akun`, serta relasi ke BUMDes dan unit selesai. `RoleSeeder` mendaftarkan 9 role Spatie; `AkunSeeder` mengisi 10 akun uji dengan password development `password`. Pivot Spatie disesuaikan agar `model_id` memakai string maksimal 30 karakter sesuai primary key `AKN-*`. Diagnostics, `php -l`, dan Laravel Pint bersih; seluruh test lulus 6 test/26 assertions. Migration dijalankan tanpa `--force`.
+
+**Commit:**
+
+```
+feat(auth): tambah akun dan rbac sembilan role
+```
+
+**Checkpoint berikutnya:** migration, model, seeder, dan test untuk `pelanggan`, termasuk relasi ke unit usaha dan fondasi data pelanggan portal pengguna.
 
 **Commit:**
 
