@@ -6,6 +6,7 @@ use App\Models\Bumdes as BumdesModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class UnitUsaha extends Model
 {
@@ -39,5 +40,10 @@ class UnitUsaha extends Model
     public function bumdes(): BelongsTo
     {
         return $this->belongsTo(BumdesModel::class, 'id_bumdes', 'id_bumdes');
+    }
+
+    public function pelanggan(): HasMany
+    {
+        return $this->hasMany(Pelanggan::class, 'id_unit', 'id_unit');
     }
 }

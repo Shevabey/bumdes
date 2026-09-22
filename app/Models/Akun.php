@@ -9,6 +9,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -67,5 +68,10 @@ class Akun extends Model implements AuthenticatableContract
     public function unit(): BelongsTo
     {
         return $this->belongsTo(UnitUsahaModel::class, 'id_unit', 'id_unit');
+    }
+
+    public function pelanggan(): HasOne
+    {
+        return $this->hasOne(Pelanggan::class, 'id_akun', 'id_akun');
     }
 }

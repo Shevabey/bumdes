@@ -265,7 +265,15 @@ feat(database): tambah migration model dan seeder unit usaha
 feat(auth): tambah akun dan rbac sembilan role
 ```
 
-**Checkpoint berikutnya:** migration, model, seeder, dan test untuk `pelanggan`, termasuk relasi ke unit usaha dan fondasi data pelanggan portal pengguna.
+**Checkpoint 5 (22 September 2026):** migration `pelanggan`, model `Pelanggan`, relasi pelanggan ke `UnitUsaha` dan `Akun`, serta `PelangganSeeder` selesai. Seeder membuat satu pelanggan per unit fase-1, total 10 pelanggan; akun portal `pengguna.sds` terhubung eksplisit ke pelanggan PAMDes Sendangsari. Format ID pelanggan mengikuti contoh arsitektur dan kolom memakai panjang 40 karena contoh tersebut melebihi 30 karakter di DBML. Diagnostics, `php -l`, dan Laravel Pint bersih; seluruh test lulus 7 test/32 assertions. Migration dijalankan tanpa `--force`.
+
+**Commit:**
+
+```
+feat(database): tambah pelanggan dan relasi portal
+```
+
+**Checkpoint berikutnya:** migration, model, seeder, dan test untuk `transaksi`, termasuk tipe input/output, detail JSON, pencatat akun, dan relasi unit usaha.
 
 **Commit:**
 
