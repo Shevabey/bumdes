@@ -9,19 +9,19 @@
 
 ## 1. Status Ringkas
 
-| Aspek                                                       | Status                                                     |
-| ----------------------------------------------------------- | ---------------------------------------------------------- |
-| Dokumen resmi (PRD, architecture, dbml, api-spec, progress) | 🟢 Seluruhnya sinkron (v2.1/v2.0)                          |
-| Setup environment development (Laragon)                     | 🟢 Fondasi Laravel, paket, migration & asset selesai       |
+| Aspek                                                       | Status                                                                |
+| ----------------------------------------------------------- | --------------------------------------------------------------------- |
+| Dokumen resmi (PRD, architecture, dbml, api-spec, progress) | 🟢 Seluruhnya sinkron (v2.1/v2.0)                                     |
+| Setup environment development (Laragon)                     | 🟢 Fondasi Laravel, paket, migration & asset selesai                  |
 | Migration & Model                                           | 🟡 Region dan BUMDes selesai; entitas domain berikutnya belum dimulai |
-| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | ⚪ Belum dimulai                                           |
-| Portal Pengguna                                             | ⚪ Belum dimulai                                           |
-| Feedback & Notifikasi Real-time (Reverb)                    | ⚪ Belum dimulai                                           |
-| Ekspor Laporan                                              | ⚪ Belum dimulai                                           |
-| Uji Coba Internal                                           | ⚪ Belum dimulai                                           |
-| UAT dengan pengurus BUMDes riil                             | ⚪ Belum dimulai                                           |
-| Deployment Fase Awal (tanpa Docker)                         | ⚪ Belum dimulai                                           |
-| Deployment Fase Lanjutan (Docker)                           | ⚪ Belum dimulai (sengaja ditunda)                         |
+| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | ⚪ Belum dimulai                                                      |
+| Portal Pengguna                                             | ⚪ Belum dimulai                                                      |
+| Feedback & Notifikasi Real-time (Reverb)                    | ⚪ Belum dimulai                                                      |
+| Ekspor Laporan                                              | ⚪ Belum dimulai                                                      |
+| Uji Coba Internal                                           | ⚪ Belum dimulai                                                      |
+| UAT dengan pengurus BUMDes riil                             | ⚪ Belum dimulai                                                      |
+| Deployment Fase Awal (tanpa Docker)                         | ⚪ Belum dimulai                                                      |
+| Deployment Fase Lanjutan (Docker)                           | ⚪ Belum dimulai (sengaja ditunda)                                    |
 
 Legenda: ⚪ Belum dimulai · 🟡 Sedang berjalan/sebagian · 🟢 Selesai
 
