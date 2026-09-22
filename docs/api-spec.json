@@ -1,0 +1,307 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "SIM-BUMDes API",
+    "version": "2.0.0",
+    "description": "API internal untuk Sistem Informasi Manajemen BUMDes Terintegrasi. Dikonsumsi oleh portal Pengguna dan panel internal (keduanya dibangun dengan Blade + Livewire custom, TANPA FilamentPHP). Kontrak data/aturan bisnis di sini adalah source of truth, konsisten dengan PRD.md v2.1 dan architecture.md v2.0. Notifikasi real-time (feedback, tagihan) dikirim lewat Laravel Reverb (WebSocket broadcast) secara terpisah dari REST endpoint di bawah ini — lihat architecture.md Bab 9 untuk detail channel broadcast."
+  },
+  "servers": [
+    { "url": "http://localhost:8000/api/v1", "description": "Local development (Docker)" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "sessionAuth": { "type": "apiKey", "in": "cookie", "name": "sim_bumdes_session", "description": "Laravel session-based auth (Sanctum SPA-style) untuk portal pengguna" }
+    },
+    "schemas": {
+      "Region": {
+        "type": "object",
+        "properties": {
+          "id_region": { "type": "string", "example": "34.04.07.2005", "description": "Format kode resmi Kemendagri berjenjang" },
+          "jenis_wilayah": { "type": "string", "enum": ["provinsi", "kabupaten_kota", "kecamatan", "kelurahan_desa"] },
+          "nama_lengkap": { "type": "string", "example": "Sendangsari", "description": "Nama wilayah, bukan kode saja" },
+          "parent_id": { "type": "string", "nullable": true },
+          "is_koordinator": { "type": "boolean" }
+        },
+        "required": ["jenis_wilayah", "nama_lengkap"]
+      },
+      "BUMDes": {
+        "type": "object",
+        "properties": {
+          "id_bumdes": { "type": "string", "example": "BMD-SDS-001" },
+          "id_kelurahan": { "type": "string" },
+          "nama_bumdes": { "type": "string" },
+          "status_aktif": { "type": "boolean" },
+          "tanggal_berdiri": { "type": "string", "format": "date" }
+        },
+        "required": ["id_kelurahan", "nama_bumdes"]
+      },
+      "UnitUsaha": {
+        "type": "object",
+        "properties": {
+          "id_unit": { "type": "string", "example": "UNT-SDS-PAM-01" },
+          "id_bumdes": { "type": "string" },
+          "jenis_unit": { "type": "string", "enum": ["pamdes", "peternakan", "mitra_tani", "sewa_mobil", "sampah", "custom"] },
+          "nama_unit": { "type": "string" },
+          "skema_field": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": { "type": "string" },
+                "label": { "type": "string" },
+                "type": { "type": "string", "enum": ["number", "currency", "text", "date"] }
+              }
+            }
+          },
+          "status_aktif": { "type": "boolean" }
+        },
+        "required": ["id_bumdes", "jenis_unit", "nama_unit"]
+      },
+      "Transaksi": {
+        "type": "object",
+        "properties": {
+          "id_transaksi": { "type": "string", "example": "TRX-20260916-000345" },
+          "id_unit": { "type": "string" },
+          "tipe": { "type": "string", "enum": ["input", "output"] },
+          "jumlah": { "type": "number", "format": "float" },
+          "detail": { "type": "object", "additionalProperties": true },
+          "tanggal": { "type": "string", "format": "date" },
+          "dicatat_oleh": { "type": "string" }
+        },
+        "required": ["id_unit", "tipe", "jumlah", "tanggal"]
+      },
+      "Pelanggan": {
+        "type": "object",
+        "properties": {
+          "id_pelanggan": { "type": "string", "example": "PLG-SDS-PAM-0045" },
+          "id_unit": { "type": "string" },
+          "nama": { "type": "string" },
+          "kontak": { "type": "string" },
+          "id_akun": { "type": "string", "nullable": true },
+          "status_aktif": { "type": "boolean" }
+        },
+        "required": ["id_unit", "nama"]
+      },
+      "Tagihan": {
+        "type": "object",
+        "properties": {
+          "id_tagihan": { "type": "string", "example": "TAG-20260916-000112" },
+          "id_pelanggan": { "type": "string" },
+          "id_unit": { "type": "string" },
+          "jumlah": { "type": "number" },
+          "jatuh_tempo": { "type": "string", "format": "date" },
+          "status": { "type": "string", "enum": ["belum_bayar", "menunggu_verifikasi", "lunas", "ditolak"] },
+          "metode": { "type": "string", "enum": ["tunai", "transfer"], "nullable": true },
+          "bukti_transfer_url": { "type": "string", "nullable": true },
+          "diverifikasi_oleh": { "type": "string", "nullable": true },
+          "tanggal_verifikasi": { "type": "string", "format": "date-time", "nullable": true }
+        },
+        "required": ["id_pelanggan", "id_unit", "jumlah", "jatuh_tempo"]
+      },
+      "IuranBUMDes": {
+        "type": "object",
+        "properties": {
+          "id_iuran": { "type": "string", "example": "IUR-BMD-SDS-001-2026-09" },
+          "id_bumdes": { "type": "string" },
+          "bulan_tahun": { "type": "string", "example": "2026-09" },
+          "jumlah": { "type": "number", "default": 50000 },
+          "status": { "type": "string", "enum": ["belum_bayar", "menunggu_verifikasi", "lunas"] },
+          "sumber_dana": { "type": "string", "enum": ["kas", "luar_kas"], "nullable": true },
+          "metode_bayar": { "type": "string", "enum": ["transfer", "tunai"], "nullable": true },
+          "bukti_pembayaran_url": { "type": "string", "nullable": true, "description": "Bukti yang dikirim Bendahara ke Admin BUMDes Koordinator" },
+          "tanggal_bayar": { "type": "string", "format": "date-time", "nullable": true },
+          "diverifikasi_oleh": { "type": "string", "nullable": true },
+          "tanggal_verifikasi": { "type": "string", "format": "date-time", "nullable": true }
+        }
+      },
+      "Referral": {
+        "type": "object",
+        "properties": {
+          "id_referral": { "type": "string", "example": "REF-BMD-SDS-001-A1B2C3" },
+          "id_bumdes_pengaju": { "type": "string" },
+          "id_bumdes_penerima": { "type": "string", "nullable": true },
+          "kode_unik": { "type": "string" },
+          "tanggal_generate": { "type": "string", "format": "date-time" },
+          "tanggal_expired": { "type": "string", "format": "date-time" },
+          "status": { "type": "string", "enum": ["aktif", "terpakai", "kedaluwarsa", "pending", "cair", "gagal"] },
+          "tanggal_redeem": { "type": "string", "format": "date-time", "nullable": true },
+          "batas_verifikasi": { "type": "string", "format": "date-time", "nullable": true },
+          "tanggal_cair": { "type": "string", "format": "date-time", "nullable": true }
+        }
+      },
+      "Akun": {
+        "type": "object",
+        "properties": {
+          "id_akun": { "type": "string", "example": "AKN-000123" },
+          "nama": { "type": "string" },
+          "username": { "type": "string" },
+          "role": { "type": "string", "enum": ["super_admin", "pengawas", "penasihat", "direktur", "admin_bumdes", "sekretaris", "bendahara", "admin_unit", "pengguna"] },
+          "id_bumdes": { "type": "string", "nullable": true },
+          "id_unit": { "type": "string", "nullable": true },
+          "status_aktif": { "type": "boolean" }
+        },
+        "required": ["nama", "username", "role"]
+      },
+      "Feedback": {
+        "type": "object",
+        "properties": {
+          "id_feedback": { "type": "string", "example": "FB-000078" },
+          "dari_id_akun": { "type": "string" },
+          "ke_id_bumdes": { "type": "string" },
+          "ke_id_unit": { "type": "string", "nullable": true },
+          "isi_catatan": { "type": "string" },
+          "status_tindak_lanjut": { "type": "string", "enum": ["belum", "sedang", "selesai"] },
+          "tanggal": { "type": "string", "format": "date-time" }
+        },
+        "required": ["ke_id_bumdes", "isi_catatan"]
+      },
+      "LogAktivitas": {
+        "type": "object",
+        "properties": {
+          "id_log": { "type": "integer" },
+          "id_akun": { "type": "string" },
+          "modul": { "type": "string" },
+          "aksi": { "type": "string" },
+          "detail": { "type": "object", "additionalProperties": true },
+          "waktu": { "type": "string", "format": "date-time" },
+          "ip_address": { "type": "string" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" },
+          "errors": { "type": "object", "additionalProperties": true }
+        }
+      }
+    }
+  },
+  "security": [{ "sessionAuth": [] }],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login akun (semua role)",
+        "security": [],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "username": { "type": "string" }, "password": { "type": "string" } }, "required": ["username", "password"] } } } },
+        "responses": { "200": { "description": "Login berhasil", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Akun" } } } }, "401": { "description": "Kredensial salah" } }
+      }
+    },
+    "/auth/logout": { "post": { "tags": ["Auth"], "summary": "Logout", "responses": { "204": { "description": "Berhasil logout" } } } },
+
+    "/regions": {
+      "get": { "tags": ["Region"], "summary": "List region (filter by level/parent)", "parameters": [ { "name": "level", "in": "query", "schema": { "type": "string" } }, { "name": "parent_id", "in": "query", "schema": { "type": "string" } } ], "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Region" } } } } } } },
+      "post": { "tags": ["Region"], "summary": "Tambah region (Super Admin)", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Region" } } } }, "responses": { "201": { "description": "Created" }, "403": { "description": "Forbidden - role tidak berwenang" } } }
+    },
+    "/regions/{id}": {
+      "put": { "tags": ["Region"], "summary": "Update region (Super Admin)", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Updated" } } },
+      "delete": { "tags": ["Region"], "summary": "Hapus region (Super Admin)", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "204": { "description": "Deleted" } } }
+    },
+
+    "/bumdes": {
+      "get": { "tags": ["BUMDes"], "summary": "List BUMDes (scope sesuai role)", "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/BUMDes" } } } } } } },
+      "post": { "tags": ["BUMDes"], "summary": "Tambah BUMDes (Super Admin)", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/BUMDes" } } } }, "responses": { "201": { "description": "Created" } } }
+    },
+    "/bumdes/{id}": {
+      "get": { "tags": ["BUMDes"], "summary": "Detail BUMDes", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/BUMDes" } } } } } },
+      "put": { "tags": ["BUMDes"], "summary": "Update data BUMDes (Admin BUMDes/Super Admin)", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Updated" } } }
+    },
+    "/bumdes/{id}/toggle-status": {
+      "patch": { "tags": ["BUMDes"], "summary": "Aktif/nonaktifkan BUMDes (FR-08, khusus Super Admin)", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "requestBody": { "content": { "application/json": { "schema": { "type": "object", "properties": { "status_aktif": { "type": "boolean" } } } } } }, "responses": { "200": { "description": "Status diperbarui" }, "403": { "description": "Hanya Super Admin" } } }
+    },
+
+    "/units": {
+      "get": { "tags": ["Unit Usaha"], "summary": "List unit usaha (filter id_bumdes)", "parameters": [{ "name": "id_bumdes", "in": "query", "schema": { "type": "string" } }], "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/UnitUsaha" } } } } } } },
+      "post": { "tags": ["Unit Usaha"], "summary": "Tambah unit usaha (Admin BUMDes/Sekretaris, FR-05)", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UnitUsaha" } } } }, "responses": { "201": { "description": "Created" } } }
+    },
+    "/units/{id}/toggle-status": {
+      "patch": { "tags": ["Unit Usaha"], "summary": "Aktif/nonaktifkan unit (FR-09, khusus Admin BUMDes)", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Status diperbarui" } } }
+    },
+
+    "/customers": {
+      "get": { "tags": ["Pelanggan"], "summary": "List pelanggan per unit", "parameters": [{ "name": "id_unit", "in": "query", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Pelanggan" } } } } } } },
+      "post": { "tags": ["Pelanggan"], "summary": "Tambah pelanggan (Admin Unit/Sekretaris)", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Pelanggan" } } } }, "responses": { "201": { "description": "Created" } } }
+    },
+    "/customers/{id}/toggle-status": {
+      "patch": { "tags": ["Pelanggan"], "summary": "Aktif/nonaktifkan pelanggan (FR-10, khusus Admin Unit)", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Status diperbarui" } } }
+    },
+
+    "/transactions": {
+      "get": { "tags": ["Transaksi"], "summary": "List transaksi per unit dengan filter tanggal", "parameters": [ { "name": "id_unit", "in": "query", "required": true, "schema": { "type": "string" } }, { "name": "dari_tanggal", "in": "query", "schema": { "type": "string", "format": "date" } }, { "name": "sampai_tanggal", "in": "query", "schema": { "type": "string", "format": "date" } } ], "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Transaksi" } } } } } } },
+      "post": { "tags": ["Transaksi"], "summary": "Catat transaksi baru (Admin Unit/Bendahara, FR-07)", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Transaksi" } } } }, "responses": { "201": { "description": "Created" } } }
+    },
+    "/units/{id}/summary": {
+      "get": { "tags": ["Transaksi"], "summary": "Ringkasan untung-rugi unit (agregat), mendukung filter periode", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }, { "name": "periode", "in": "query", "schema": { "type": "string", "enum": ["mingguan", "bulanan"] } }], "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object", "properties": { "total_input": { "type": "number" }, "total_output": { "type": "number" }, "untung_rugi": { "type": "number" } } } } } } } }
+    },
+    "/bumdes/{id}/summary": {
+      "get": { "tags": ["Transaksi"], "summary": "Ringkasan untung-rugi gabungan seluruh unit di satu BUMDes (agregat per BUMDes)", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }, { "name": "periode", "in": "query", "schema": { "type": "string", "enum": ["mingguan", "bulanan"] } }], "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object", "properties": { "total_input": { "type": "number" }, "total_output": { "type": "number" }, "untung_rugi": { "type": "number" }, "rincian_per_unit": { "type": "array", "items": { "type": "object", "properties": { "id_unit": { "type": "string" }, "untung_rugi": { "type": "number" } } } } } } } } } } }
+    },
+
+    "/bills": {
+      "get": { "tags": ["Tagihan"], "summary": "List tagihan (filter id_pelanggan/id_unit/status, dukung search & periode)", "parameters": [ { "name": "id_pelanggan", "in": "query", "schema": { "type": "string" } }, { "name": "id_unit", "in": "query", "schema": { "type": "string" } }, { "name": "status", "in": "query", "schema": { "type": "string" } }, { "name": "search", "in": "query", "schema": { "type": "string" }, "description": "Cari berdasarkan nama pelanggan atau id_tagihan" }, { "name": "periode", "in": "query", "schema": { "type": "string", "enum": ["mingguan", "bulanan"] } } ], "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Tagihan" } } } } } } },
+      "post": { "tags": ["Tagihan"], "summary": "Buat tagihan baru (Admin Unit/Sekretaris, FR-11)", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Tagihan" } } } }, "responses": { "201": { "description": "Created" } } }
+    },
+    "/bills/{id}/pay-cash": {
+      "post": { "tags": ["Tagihan"], "summary": "Catat pembayaran tunai (Admin Unit/Sekretaris/Bendahara, FR-15)", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Status menjadi lunas" } } }
+    },
+    "/bills/{id}/upload-proof": {
+      "post": { "tags": ["Tagihan"], "summary": "Upload bukti transfer (Pengguna/Pelanggan, FR-13)", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "requestBody": { "required": true, "content": { "multipart/form-data": { "schema": { "type": "object", "properties": { "file": { "type": "string", "format": "binary" } } } } } }, "responses": { "200": { "description": "Status menjadi menunggu_verifikasi" } } }
+    },
+    "/bills/{id}/verify": {
+      "post": { "tags": ["Tagihan"], "summary": "Verifikasi/tolak bukti transfer (Admin Unit, FR-14)", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "approve": { "type": "boolean" }, "catatan": { "type": "string" } } } } } }, "responses": { "200": { "description": "Status menjadi lunas atau ditolak" } } }
+    },
+
+    "/dues": {
+      "get": { "tags": ["Iuran"], "summary": "List iuran per BUMDes/bulan", "parameters": [{ "name": "id_bumdes", "in": "query", "schema": { "type": "string" } }, { "name": "status", "in": "query", "schema": { "type": "string" } }], "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/IuranBUMDes" } } } } } } }
+    },
+    "/dues/{id}/pay": {
+      "post": { "tags": ["Iuran"], "summary": "Bayar iuran dari kas/luar kas dengan metode transfer/tunai, kirim bukti ke koordinator (Bendahara, FR-17)", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "requestBody": { "required": true, "content": { "multipart/form-data": { "schema": { "type": "object", "properties": { "sumber_dana": { "type": "string", "enum": ["kas", "luar_kas"] }, "metode_bayar": { "type": "string", "enum": ["transfer", "tunai"] }, "bukti_pembayaran": { "type": "string", "format": "binary", "description": "Wajib jika metode_bayar = transfer" } }, "required": ["sumber_dana", "metode_bayar"] } } } }, "responses": { "200": { "description": "Status menjadi menunggu_verifikasi, bukti terkirim ke Admin BUMDes Koordinator" } } }
+    },
+    "/dues/{id}/verify": {
+      "post": { "tags": ["Iuran"], "summary": "Verifikasi iuran oleh koordinator kecamatan (Admin BUMDes Sendangsari)", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "requestBody": { "content": { "application/json": { "schema": { "type": "object", "properties": { "approve": { "type": "boolean" } } } } } }, "responses": { "200": { "description": "Status menjadi lunas atau kembali ke belum_bayar jika ditolak" } } }
+    },
+
+    "/referrals/generate": {
+      "post": { "tags": ["Referral"], "summary": "Generate/lihat kode referral aktif milik BUMDes (Admin BUMDes, FR-18)", "requestBody": { "content": { "application/json": { "schema": { "type": "object", "properties": { "id_bumdes_pengaju": { "type": "string" } } } } } }, "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Referral" } } } } } }
+    },
+    "/referrals/redeem": {
+      "post": { "tags": ["Referral"], "summary": "Redeem kode referral (Admin BUMDes penerima, FR-20)", "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "kode_unik": { "type": "string" }, "id_bumdes_penerima": { "type": "string" } }, "required": ["kode_unik", "id_bumdes_penerima"] } } } }, "responses": { "200": { "description": "Redeem berhasil, status referral menjadi pending" }, "422": { "description": "Kode tidak valid/kedaluwarsa/sudah dipakai", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } } } }
+    },
+    "/referrals": {
+      "get": { "tags": ["Referral"], "summary": "Riwayat referral per BUMDes", "parameters": [{ "name": "id_bumdes", "in": "query", "schema": { "type": "string" } }], "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Referral" } } } } } } }
+    },
+
+    "/accounts": {
+      "get": { "tags": ["Akun"], "summary": "List akun (scope sesuai role pemanggil), dukung search", "parameters": [{ "name": "search", "in": "query", "schema": { "type": "string" }, "description": "Cari berdasarkan nama atau username" }, { "name": "role", "in": "query", "schema": { "type": "string" } }], "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Akun" } } } } } } },
+      "post": { "tags": ["Akun"], "summary": "Buat akun baru. Super Admin dapat membuat akun role apa pun di BUMDes mana pun (termasuk Pelanggan); Admin BUMDes hanya untuk tim internal BUMDes-nya (Sekretaris/Bendahara/Admin Unit) (FR-24/FR-25)", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Akun" } } } }, "responses": { "201": { "description": "Created" }, "403": { "description": "Role pemanggil tidak berwenang membuat jenis akun ini" } } }
+    },
+    "/accounts/{id}/toggle-status": {
+      "patch": { "tags": ["Akun"], "summary": "Aktif/nonaktifkan akun", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Status diperbarui" } } }
+    },
+    "/accounts/{id}/activity-log": {
+      "get": { "tags": ["Akun"], "summary": "Log aktivitas per akun, dukung search & filter tanggal (Super Admin, FR-32)", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }, { "name": "search", "in": "query", "schema": { "type": "string" }, "description": "Cari berdasarkan modul atau aksi" }, { "name": "dari_tanggal", "in": "query", "schema": { "type": "string", "format": "date" } }, { "name": "sampai_tanggal", "in": "query", "schema": { "type": "string", "format": "date" } }], "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/LogAktivitas" } } } } } } }
+    },
+
+    "/feedback": {
+      "get": { "tags": ["Feedback"], "summary": "List catatan/feedback (filter id_bumdes/id_unit)", "parameters": [ { "name": "id_bumdes", "in": "query", "schema": { "type": "string" } }, { "name": "id_unit", "in": "query", "schema": { "type": "string" } } ], "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Feedback" } } } } } } },
+      "post": { "tags": ["Feedback"], "summary": "Kirim catatan/feedback (Pengawas/Penasihat/Direktur/Super Admin, FR-33)", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Feedback" } } } }, "responses": { "201": { "description": "Created, notifikasi real-time dikirim (FR-34)" } } }
+    },
+    "/feedback/{id}/status": {
+      "patch": { "tags": ["Feedback"], "summary": "Update status tindak lanjut (Pengurus BUMDes, FR-35)", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "requestBody": { "content": { "application/json": { "schema": { "type": "object", "properties": { "status_tindak_lanjut": { "type": "string", "enum": ["belum", "sedang", "selesai"] } } } } } }, "responses": { "200": { "description": "Updated" } } }
+    },
+
+    "/reports/unit/{id}/export": {
+      "get": { "tags": ["Laporan"], "summary": "Ekspor laporan transaksi unit ke Excel, format mingguan atau bulanan (FR-28)", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }, { "name": "periode", "in": "query", "required": true, "schema": { "type": "string", "enum": ["mingguan", "bulanan"] } }, { "name": "dari_tanggal", "in": "query", "schema": { "type": "string", "format": "date" } }], "responses": { "200": { "description": "File Excel (.xlsx)", "content": { "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {} } } } }
+    },
+    "/reports/bumdes/{id}/export": {
+      "get": { "tags": ["Laporan"], "summary": "Ekspor laporan gabungan seluruh unit dalam satu BUMDes ke Excel, format mingguan atau bulanan (FR-28)", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }, { "name": "periode", "in": "query", "required": true, "schema": { "type": "string", "enum": ["mingguan", "bulanan"] } }, { "name": "dari_tanggal", "in": "query", "schema": { "type": "string", "format": "date" } }], "responses": { "200": { "description": "File Excel (.xlsx)" } } }
+    },
+
+    "/dashboard/national": {
+      "get": { "tags": ["Dashboard"], "summary": "Data dashboard monitoring nasional (Pengawas/Penasihat/Direktur/Super Admin, FR-29/FR-30)", "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object", "properties": { "total_bumdes_aktif": { "type": "integer" }, "bumdes_menunggak_iuran": { "type": "integer" }, "unit_tanpa_aktivitas": { "type": "integer" }, "verifikasi_tertunda": { "type": "integer" }, "untung_rugi_per_bumdes": { "type": "array", "items": { "type": "object", "properties": { "id_bumdes": { "type": "string" }, "nama_bumdes": { "type": "string" }, "untung_rugi": { "type": "number" } } } } } } } } } } }
+    },
+    "/dashboard/bumdes/{id}": {
+      "get": { "tags": ["Dashboard"], "summary": "Data dashboard tingkat BUMDes", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "OK" } } }
+    }
+  }
+}

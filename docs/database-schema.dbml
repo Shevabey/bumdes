@@ -1,0 +1,161 @@
+Project sim_bumdes {
+  database_type: 'MySQL'
+  note: 'Skema database SIM-BUMDes v2.0 - generate visual ERD di dbdiagram.io. Sumber acuan: PRD.md v2.1 & architecture.md v2.0. Untung-rugi dihitung di runtime oleh ReportService (agregasi tabel transaksi per id_unit dan per id_bumdes), bukan tabel tersendiri.'
+}
+
+Table region {
+  id_region varchar(20) [pk, note: 'Format kode resmi Kemendagri berjenjang, contoh: 34.04.07.2005']
+  jenis_wilayah varchar(20) [note: 'enum: provinsi, kabupaten_kota, kecamatan, kelurahan_desa']
+  nama_lengkap varchar(150) [note: 'Nama wilayah, contoh: Sendangsari (bukan kode saja)']
+  parent_id varchar(20) [note: 'self-reference ke region.id_region']
+  is_koordinator boolean [default: false, note: 'true hanya utk 1 kelurahan_desa per kecamatan']
+  created_at datetime
+  updated_at datetime
+}
+
+Table bumdes {
+  id_bumdes varchar(30) [pk, note: 'Format: BMD-{kode_kelurahan}-{urut3digit}']
+  id_kelurahan varchar(20) [ref: > region.id_region]
+  nama_bumdes varchar(150)
+  status_aktif boolean [default: true]
+  tanggal_berdiri date
+  created_at datetime
+  updated_at datetime
+}
+
+Table unit_usaha {
+  id_unit varchar(30) [pk, note: 'Format: UNT-{id_bumdes}-{kode_jenis}-{urut2digit}']
+  id_bumdes varchar(30) [ref: > bumdes.id_bumdes]
+  jenis_unit varchar(30) [note: 'enum: pamdes, peternakan, mitra_tani, sewa_mobil, sampah, custom']
+  nama_unit varchar(150)
+  skema_field json [note: 'daftar field custom transaksi unit ini']
+  status_aktif boolean [default: true]
+  created_at datetime
+  updated_at datetime
+}
+
+Table akun {
+  id_akun varchar(30) [pk, note: 'Format: AKN-{urut6digit}']
+  nama varchar(150)
+  username varchar(100) [unique]
+  password_hash varchar(255)
+  role varchar(30) [note: 'enum: super_admin, pengawas, penasihat, direktur, admin_bumdes, sekretaris, bendahara, admin_unit, pengguna']
+  id_bumdes varchar(30) [ref: > bumdes.id_bumdes, note: 'nullable']
+  id_unit varchar(30) [ref: > unit_usaha.id_unit, note: 'nullable, strict 1:1 khusus role admin_unit']
+  status_aktif boolean [default: true]
+  created_at datetime
+  updated_at datetime
+}
+
+Table pelanggan {
+  id_pelanggan varchar(30) [pk, note: 'Format: PLG-{id_unit}-{urut4digit}']
+  id_unit varchar(30) [ref: > unit_usaha.id_unit]
+  nama varchar(150)
+  kontak varchar(50)
+  id_akun varchar(30) [ref: > akun.id_akun, note: 'nullable, diisi saat pelanggan diberi akses login']
+  status_aktif boolean [default: true]
+  created_at datetime
+  updated_at datetime
+}
+
+Table transaksi {
+  id_transaksi varchar(35) [pk, note: 'Format: TRX-{YYYYMMDD}-{urut6digit}']
+  id_unit varchar(30) [ref: > unit_usaha.id_unit]
+  tipe varchar(10) [note: 'enum: input, output']
+  jumlah decimal(15,2)
+  detail json [note: 'sesuai skema_field unit']
+  tanggal date
+  dicatat_oleh varchar(30) [ref: > akun.id_akun]
+  created_at datetime
+  updated_at datetime
+}
+
+Table tagihan {
+  id_tagihan varchar(35) [pk, note: 'Format: TAG-{YYYYMMDD}-{urut6digit}']
+  id_pelanggan varchar(30) [ref: > pelanggan.id_pelanggan]
+  id_unit varchar(30) [ref: > unit_usaha.id_unit]
+  jumlah decimal(15,2)
+  jatuh_tempo date
+  status varchar(25) [note: 'enum: belum_bayar, menunggu_verifikasi, lunas, ditolak']
+  metode varchar(15) [note: 'enum: tunai, transfer (nullable)']
+  bukti_transfer_url varchar(255) [note: 'nullable']
+  diverifikasi_oleh varchar(30) [ref: > akun.id_akun, note: 'nullable']
+  tanggal_verifikasi datetime [note: 'nullable']
+  created_at datetime
+  updated_at datetime
+}
+
+Table iuran_bumdes {
+  id_iuran varchar(40) [pk, note: 'Format: IUR-{id_bumdes}-{YYYYMM}']
+  id_bumdes varchar(30) [ref: > bumdes.id_bumdes]
+  bulan_tahun varchar(7) [note: 'format YYYY-MM']
+  jumlah decimal(15,2) [default: 50000]
+  status varchar(25) [note: 'enum: belum_bayar, menunggu_verifikasi, lunas']
+  sumber_dana varchar(15) [note: 'enum: kas, luar_kas (nullable)']
+  metode_bayar varchar(15) [note: 'enum: transfer, tunai (nullable)']
+  bukti_pembayaran_url varchar(255) [note: 'bukti dikirim Bendahara ke Admin BUMDes Koordinator, nullable']
+  tanggal_bayar datetime [note: 'nullable']
+  diverifikasi_oleh varchar(30) [ref: > akun.id_akun, note: 'nullable, admin BUMDes koordinator']
+  tanggal_verifikasi datetime [note: 'nullable']
+  created_at datetime
+  updated_at datetime
+}
+
+Table kas_bumdes {
+  id_kas varchar(35) [pk, note: 'Format: KAS-{id_bumdes}']
+  id_bumdes varchar(30) [ref: - bumdes.id_bumdes, note: 'relasi 1:1']
+  saldo decimal(15,2) [default: 0]
+  created_at datetime
+  updated_at datetime
+}
+
+Table kas_mutasi {
+  id_mutasi bigint [pk, increment]
+  id_kas varchar(35) [ref: > kas_bumdes.id_kas]
+  tipe varchar(10) [note: 'enum: masuk, keluar']
+  jumlah decimal(15,2)
+  sumber varchar(20) [note: 'enum: referral, iuran, lainnya']
+  keterangan varchar(255)
+  tanggal datetime
+  created_at datetime
+}
+
+Table referral {
+  id_referral varchar(40) [pk, note: 'Format: REF-{id_bumdes_pengaju}-{6karakter_acak}']
+  id_bumdes_pengaju varchar(30) [ref: > bumdes.id_bumdes]
+  id_bumdes_penerima varchar(30) [ref: > bumdes.id_bumdes, note: 'nullable sampai di-redeem']
+  kode_unik varchar(10) [unique]
+  tanggal_generate datetime
+  tanggal_expired datetime [note: '= tanggal_generate + 5 hari']
+  status varchar(15) [note: 'enum: aktif, terpakai, kedaluwarsa, pending, cair, gagal']
+  tanggal_redeem datetime [note: 'nullable']
+  batas_verifikasi datetime [note: 'nullable, = tanggal_redeem + 15 hari']
+  tanggal_cair datetime [note: 'nullable']
+  created_at datetime
+  updated_at datetime
+}
+
+Table feedback {
+  id_feedback varchar(20) [pk, note: 'Format: FB-{urut6digit}']
+  dari_id_akun varchar(30) [ref: > akun.id_akun]
+  ke_id_bumdes varchar(30) [ref: > bumdes.id_bumdes]
+  ke_id_unit varchar(30) [ref: > unit_usaha.id_unit, note: 'nullable']
+  isi_catatan text
+  status_tindak_lanjut varchar(10) [note: 'enum: belum, sedang, selesai', default: 'belum']
+  tanggal datetime
+  created_at datetime
+  updated_at datetime
+}
+
+Table log_aktivitas {
+  id_log bigint [pk, increment]
+  id_akun varchar(30) [ref: > akun.id_akun]
+  modul varchar(50)
+  aksi varchar(50)
+  detail json
+  waktu datetime
+  ip_address varchar(45)
+}
+
+// Self-reference wilayah berjenjang
+Ref: region.parent_id > region.id_region
