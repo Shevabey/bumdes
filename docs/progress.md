@@ -281,7 +281,15 @@ feat(database): tambah pelanggan dan relasi portal
 feat(database): tambah transaksi dan relasi pencatat
 ```
 
-**Checkpoint berikutnya:** migration, model, seeder, dan test untuk `tagihan`, termasuk status pembayaran, metode tunai/transfer, dan relasi pelanggan-unit.
+**Checkpoint 7 (22 September 2026):** migration `tagihan`, model `Tagihan`, relasi ke `Pelanggan`, `UnitUsaha`, dan akun verifikator, serta `TagihanSeeder` selesai. Seeder membuat 10 tagihan dengan variasi 1 lunas tunai, 1 menunggu verifikasi transfer, dan 8 belum bayar. Kolom `id_pelanggan` memakai panjang 40 agar konsisten dengan ID pelanggan aktual. Diagnostics, `php -l`, dan Laravel Pint bersih; seluruh test lulus 9 test/47 assertions. Migration dijalankan tanpa `--force`.
+
+**Commit:**
+
+```
+feat(database): tambah tagihan dan status pembayaran
+```
+
+**Checkpoint berikutnya:** migration, model, seeder, dan test untuk `iuran_bumdes`, termasuk iuran Rp50.000 per BUMDes dan status verifikasi koordinator.
 
 **Commit:**
 

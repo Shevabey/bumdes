@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Bumdes as BumdesModel;
+use App\Models\Tagihan as TagihanModel;
 use App\Models\Transaksi as TransaksiModel;
 use App\Models\UnitUsaha as UnitUsahaModel;
 use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
@@ -80,5 +81,10 @@ class Akun extends Model implements AuthenticatableContract
     public function transaksi(): HasMany
     {
         return $this->hasMany(TransaksiModel::class, 'dicatat_oleh', 'id_akun');
+    }
+
+    public function tagihanDiverifikasi(): HasMany
+    {
+        return $this->hasMany(TagihanModel::class, 'diverifikasi_oleh', 'id_akun');
     }
 }
