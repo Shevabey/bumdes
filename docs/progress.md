@@ -9,19 +9,19 @@
 
 ## 1. Status Ringkas
 
-| Aspek                                                       | Status                                                                |
-| ----------------------------------------------------------- | --------------------------------------------------------------------- |
-| Dokumen resmi (PRD, architecture, dbml, api-spec, progress) | 🟢 Seluruhnya sinkron (v2.1/v2.0)                                     |
-| Setup environment development (Laragon)                     | 🟢 Fondasi Laravel, paket, migration & asset selesai                  |
-| Migration & Model                                           | 🟡 Region dan BUMDes selesai; entitas domain berikutnya belum dimulai |
-| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | ⚪ Belum dimulai                                                      |
-| Portal Pengguna                                             | ⚪ Belum dimulai                                                      |
-| Feedback & Notifikasi Real-time (Reverb)                    | ⚪ Belum dimulai                                                      |
-| Ekspor Laporan                                              | ⚪ Belum dimulai                                                      |
-| Uji Coba Internal                                           | ⚪ Belum dimulai                                                      |
-| UAT dengan pengurus BUMDes riil                             | ⚪ Belum dimulai                                                      |
-| Deployment Fase Awal (tanpa Docker)                         | ⚪ Belum dimulai                                                      |
-| Deployment Fase Lanjutan (Docker)                           | ⚪ Belum dimulai (sengaja ditunda)                                    |
+| Aspek                                                       | Status                                                                             |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Dokumen resmi (PRD, architecture, dbml, api-spec, progress) | 🟢 Seluruhnya sinkron (v2.1/v2.0)                                                  |
+| Setup environment development (Laragon)                     | 🟢 Fondasi Laravel, paket, migration & asset selesai                               |
+| Migration & Model                                           | 🟡 Region, BUMDes, dan Unit Usaha selesai; entitas domain berikutnya belum dimulai |
+| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | ⚪ Belum dimulai                                                                   |
+| Portal Pengguna                                             | ⚪ Belum dimulai                                                                   |
+| Feedback & Notifikasi Real-time (Reverb)                    | ⚪ Belum dimulai                                                                   |
+| Ekspor Laporan                                              | ⚪ Belum dimulai                                                                   |
+| Uji Coba Internal                                           | ⚪ Belum dimulai                                                                   |
+| UAT dengan pengurus BUMDes riil                             | ⚪ Belum dimulai                                                                   |
+| Deployment Fase Awal (tanpa Docker)                         | ⚪ Belum dimulai                                                                   |
+| Deployment Fase Lanjutan (Docker)                           | ⚪ Belum dimulai (sengaja ditunda)                                                 |
 
 Legenda: ⚪ Belum dimulai · 🟡 Sedang berjalan/sebagian · 🟢 Selesai
 
@@ -243,11 +243,21 @@ php artisan migrate:fresh --seed
 
 **Checkpoint 2 (22 September 2026):** migration `bumdes`, model `Bumdes` dengan relasi `kelurahan`, dan `BumdesSeeder` untuk dua BUMDes fase-1 (`BMD-SDS-001` dan `BMD-SDR-001`) selesai. Foreign key `id_kelurahan` menjaga relasi ke tabel `region`; seeder sudah diuji idempotent. Diagnostics dan `php -l` seluruh file checkpoint bersih; seluruh test lulus 4 test/13 assertions. Migration dijalankan tanpa `--force`.
 
+**Checkpoint 3 (22 September 2026):** migration `unit_usaha`, model `UnitUsaha` dengan relasi `bumdes`, dan relasi `Bumdes::units()` selesai. `UnitUsahaSeeder` mengisi lima jenis standar (`pamdes`, `peternakan`, `mitra_tani`, `sewa_mobil`, `sampah`) untuk masing-masing BUMDes fase-1, total 10 unit. `skema_field` memakai JSON array kosong sementara detail field masih menunggu FGD sesuai isu terbuka PRD. Diagnostics, `php -l`, dan Laravel Pint bersih; seluruh test lulus 5 test/19 assertions. Migration dijalankan tanpa `--force`.
+
 **Commit:**
 
 ```
 feat(database): tambah migration model dan seeder bumdes
 ```
+
+**Commit:**
+
+```
+feat(database): tambah migration model dan seeder unit usaha
+```
+
+**Checkpoint berikutnya:** migration, model, seeder, dan test untuk `akun`, termasuk pemetaan 9 role sesuai PRD serta fondasi autentikasi username.
 
 **Commit:**
 

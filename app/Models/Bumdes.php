@@ -2,17 +2,23 @@
 
 namespace App\Models;
 
+use App\Models\Region as RegionModel;
+use App\Models\UnitUsaha as UnitUsahaModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Bumdes extends Model
 {
     use HasFactory;
 
     protected $table = 'bumdes';
+
     protected $primaryKey = 'id_bumdes';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [
@@ -33,6 +39,11 @@ class Bumdes extends Model
 
     public function kelurahan(): BelongsTo
     {
-        return $this->belongsTo(Region::class, 'id_kelurahan', 'id_region');
+        return $this->belongsTo(RegionModel::class, 'id_kelurahan', 'id_region');
+    }
+
+    public function units(): HasMany
+    {
+        return $this->hasMany(UnitUsahaModel::class, 'id_bumdes', 'id_bumdes');
     }
 }
