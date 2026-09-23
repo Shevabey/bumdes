@@ -13,11 +13,11 @@
 | ----------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | Dokumen resmi (PRD, architecture, dbml, api-spec, progress) | 🟢 Seluruhnya sinkron (v2.1/v2.0)                                                  |
 | Setup environment development (Laragon)                     | 🟢 Fondasi Laravel, paket, migration & asset selesai                               |
-| Migration & Model                                           | 🟡 Region, BUMDes, dan Unit Usaha selesai; entitas domain berikutnya belum dimulai |
-| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | ⚪ Belum dimulai                                                                   |
+| Migration & Model                                           | 🟢 Seluruh 12 tabel, Model Eloquent, dan Seeder wilayah+role+transaksional selesai |
+| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | 🟡 Service layer selesai (Akun, Tagihan, Iuran, Referral, Report); Livewire belum  |
 | Portal Pengguna                                             | ⚪ Belum dimulai                                                                   |
-| Feedback & Notifikasi Real-time (Reverb)                    | ⚪ Belum dimulai                                                                   |
-| Ekspor Laporan                                              | ⚪ Belum dimulai                                                                   |
+| Feedback & Notifikasi Real-time (Reverb)                    | 🟡 FeedbackService selesai; Reverb broadcast Livewire belum                       |
+| Ekspor Laporan                                              | 🟢 UnitTransaksiExport & BumdesLaporanExport Excel multi-sheet selesai              |
 | Uji Coba Internal                                           | ⚪ Belum dimulai                                                                   |
 | UAT dengan pengurus BUMDes riil                             | ⚪ Belum dimulai                                                                   |
 | Deployment Fase Awal (tanpa Docker)                         | ⚪ Belum dimulai                                                                   |
@@ -403,13 +403,15 @@ feat(referral): tambah service state machine referral antar bumdes
 feat(feedback): tambah service pencatatan feedback dan status tindak lanjut
 ```
 
-**Checkpoint berikutnya:** bangun ekspor laporan Excel (`UnitTransaksiExport` dan `BumdesLaporanExport`) dengan filter periode mingguan/bulanan sesuai Bab 6.6 dan api-spec.
+**Checkpoint 22 (23 September 2026):** Ekspor laporan Excel selesai (`UnitTransaksiExport` dan `BumdesLaporanExport`). `UnitTransaksiExport` mengekspor transaksi per unit usaha dengan filter periode (`mingguan`/`bulanan`) dan acuan tanggal opsional (`$dariTanggal`), auto-size, judul sheet, heading terstandar, dan detail JSON. `BumdesLaporanExport` menyajikan data multi-sheet: Sheet 1 (`Ringkasan Untung-Rugi`) mengagregasi input, output, dan untung-rugi tiap unit serta total BUMDes; Sheet 2 (`Detail Transaksi`) memuat rincian transaksi seluruh unit di bawah BUMDes tersebut. `ReportService` diperluas dengan parameter tanggal acuan `Carbon|string|null $dariTanggal` dan `applyPeriode()` dibuat publik. Bagian 1 "Status Ringkas" diperbarui (Migration & Model 🟢, Ekspor Laporan 🟢, Fitur inti & Feedback 🟡). Diagnostics/syntax `php -l` bersih, Laravel Pint lulus, focused test `ReportExportTest` lulus 5 test/32 assertions, `ReportServiceTest` tetap lulus 2 test/8 assertions, full suite lulus 64 test/286 assertions. Development seeder berhasil dijalankan ulang secara idempotent.
 
 **Commit:**
 
 ```
-feat(database): tambah migration 12 entitas, model, dan seeder wilayah+role
+feat(reports): tambah ekspor laporan Excel per unit dan per BUMDes dengan filter periode
 ```
+
+**Checkpoint berikutnya:** bangun fondasi komponen UI Livewire `Shared\DataTable` dan layout tabel terstandar untuk panel internal.
 
 ---
 
@@ -532,12 +534,12 @@ VPS Ubuntu 22.04 + Nginx + PHP-FPM + MySQL terinstal langsung, Supervisor untuk 
 ## 9. Checklist Menyeluruh (Rekap Semua Fase)
 
 - [x] Bab 4 — Setup Laragon, project Laravel, database, package (RBAC, activity log, excel, **Reverb**), asset frontend _(PHP 8.3, database `bumdes`, migration dasar + package, Reverb config, Echo/Pusher, storage link, dan `npm run build` tervalidasi)_
-- [ ] Bab 5 — Migration 12 tabel (skema Kemendagri untuk region), Model, Seeder
-- [ ] Bab 6.1-6.2 — Policy RBAC, Service Layer (Referral, Iuran, Tagihan, Report)
-- [ ] Bab 6.3 — Scheduled Command (iuran, referral expire/verify)
+- [x] Bab 5 — Migration 12 tabel (skema Kemendagri untuk region), Model, Seeder
+- [x] Bab 6.1-6.2 — Policy RBAC, Service Layer (Referral, Iuran, Tagihan, Report)
+- [x] Bab 6.3 — Scheduled Command (iuran, referral expire/verify)
 - [ ] Bab 6.4 — Komponen `DataTable` + 10 modul manager Livewire (pengganti Filament)
 - [ ] Bab 6.5 — Portal Pengguna + notifikasi real-time via Reverb
-- [ ] Bab 6.6 — Ekspor Excel dengan filter periode
+- [x] Bab 6.6 — Ekspor Excel dengan filter periode
 - [ ] Bab 7 — Uji coba internal 11 langkah, seluruh 36 FR tercakup
 - [ ] FGD dengan pengurus BUMDes (isu terbuka #1 & #2)
 - [ ] UAT dengan pengurus BUMDes riil

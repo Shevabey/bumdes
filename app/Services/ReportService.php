@@ -12,10 +12,10 @@ class ReportService
     /**
      * @return array{total_input: float, total_output: float, untung_rugi: float}
      */
-    public function untungRugiUnit(string $idUnit, ?string $periode = null): array
+    public function untungRugiUnit(string $idUnit, ?string $periode = null, Carbon|string|null $dariTanggal = null): array
     {
         $query = Transaksi::query()->where('id_unit', $idUnit);
-        $this->applyPeriode($query, $periode);
+        $this->applyPeriode($query, $periode, $dariTanggal);
 
         return $this->summarize($query);
     }
@@ -23,27 +23,32 @@ class ReportService
     /**
      * @return array{total_input: float, total_output: float, untung_rugi: float}
      */
-    public function untungRugiBumdes(string $idBumdes, ?string $periode = null): array
+    public function untungRugiBumdes(string $idBumdes, ?string $periode = null, Carbon|string|null $dariTanggal = null): array
     {
         $unitIds = UnitUsaha::query()
             ->where('id_bumdes', $idBumdes)
             ->pluck('id_unit');
         $query = Transaksi::query()->whereIn('id_unit', $unitIds);
-        $this->applyPeriode($query, $periode);
+        $this->applyPeriode($query, $periode, $dariTanggal);
 
         return $this->summarize($query);
     }
 
-    private function applyPeriode(Builder $query, ?string $periode): void
+    public function applyPeriode(Builder $query, ?string $periode, Carbon|string|null $dariTanggal = null): void
     {
+        $baseDate = is_string($dariTanggal) ? Carbon::parse($dariTanggal) : ($dariTanggal?->copy() ?? Carbon::today());
+
         if ($periode === null) {
+            if ($dariTanggal !== null) {
+                $query->whereDate('tanggal', '>=', $baseDate->toDateString());
+            }
+
             return;
         }
 
-        $today = Carbon::today();
         $range = match ($periode) {
-            'mingguan' => [$today->copy()->startOfWeek(), $today->copy()->endOfWeek()],
-            'bulanan' => [$today->copy()->startOfMonth(), $today->copy()->endOfMonth()],
+            'mingguan' => [$baseDate->copy()->startOfWeek(), $baseDate->copy()->endOfWeek()],
+            'bulanan' => [$baseDate->copy()->startOfMonth(), $baseDate->copy()->endOfMonth()],
             default => throw new \InvalidArgumentException('Periode harus berupa mingguan atau bulanan.'),
         };
 
