@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\IuranBumdes as IuranBumdesModel;
 use App\Models\KasBumdes as KasBumdesModel;
+use App\Models\Referral as ReferralModel;
 use App\Models\Region as RegionModel;
 use App\Models\UnitUsaha as UnitUsahaModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -58,5 +59,15 @@ class Bumdes extends Model
     public function kas(): HasOne
     {
         return $this->hasOne(KasBumdesModel::class, 'id_bumdes', 'id_bumdes');
+    }
+
+    public function referralsDiajukan(): HasMany
+    {
+        return $this->hasMany(ReferralModel::class, 'id_bumdes_pengaju', 'id_bumdes');
+    }
+
+    public function referralsDiterima(): HasMany
+    {
+        return $this->hasMany(ReferralModel::class, 'id_bumdes_penerima', 'id_bumdes');
     }
 }

@@ -305,7 +305,15 @@ feat(database): tambah iuran bumdes dan verifikasi koordinator
 feat(database): tambah kas bumdes dan mutasi kas
 ```
 
-**Checkpoint berikutnya:** migration, model, seeder, dan test untuk `referral`, termasuk kode aktif 5 hari, redeem, status pending/cair/gagal, dan batas verifikasi 15 hari.
+**Checkpoint 10 (23 September 2026):** migration `referral`, model `Referral`, relasi BUMDes pengaju/penerima, dan `ReferralSeeder` selesai. Seeder mencakup 4 state (`aktif`, `pending`, `cair`, `gagal`), masa berlaku kode 5 hari, tanggal redeem, batas verifikasi 15 hari, dan tanggal pencairan. Diagnostics, `php -l`, dan Laravel Pint bersih; seluruh test lulus 12 test/74 assertions. Migration dijalankan tanpa `--force` setelah MySQL Laragon diaktifkan.
+
+**Commit:**
+
+```
+feat(database): tambah referral dan state verifikasi
+```
+
+**Checkpoint berikutnya:** migration, model, seeder, dan test untuk `feedback`, termasuk status tindak lanjut dan relasi pengawas ke BUMDes/unit.
 
 **Commit:**
 
