@@ -395,7 +395,15 @@ feat(iuran): tambah alur pembayaran iuran dan verifikasi koordinator
 feat(referral): tambah service state machine referral antar bumdes
 ```
 
-**Checkpoint berikutnya:** bangun `FeedbackService` untuk pengelolaan feedback pengawas/penasihat/direktur ke BUMDes/unit dan pembaruan status tindak lanjut (`belum`, `sedang`, `selesai`).
+**Checkpoint 21 (23 September 2026):** `FeedbackService` selesai untuk pengelolaan feedback pengawas/penasihat/direktur dan tindak lanjut pengurus BUMDes/unit. Service memvalidasi pengirim harus berasal dari role monitoring (`pengawas`, `penasihat`, `direktur`, `super_admin`), memvalidasi bahwa unit target harus berada di bawah BUMDes target, isi catatan wajib diisi, dan mengenerate ID format `FB-%06d` dengan status default `belum`. Pembaruan status tindak lanjut (`belum`, `sedang`, `selesai`) dibatasi hanya untuk Super Admin, Admin BUMDes pada BUMDes target, atau Admin Unit pada unit target terkait. Diagnostics/syntax `php -l` bersih, migration berjalan tanpa `--force` dan tidak ada pending migration, Laravel Pint lulus, focused test `FeedbackServiceTest` lulus 7 test/20 assertions, full suite lulus 59 test/254 assertions. Development seeder berhasil dijalankan ulang secara idempotent; Tinker inspection mengonfirmasi 3 feedback.
+
+**Commit:**
+
+```
+feat(feedback): tambah service pencatatan feedback dan status tindak lanjut
+```
+
+**Checkpoint berikutnya:** bangun ekspor laporan Excel (`UnitTransaksiExport` dan `BumdesLaporanExport`) dengan filter periode mingguan/bulanan sesuai Bab 6.6 dan api-spec.
 
 **Commit:**
 
