@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Livewire\SuperAdmin\AkunManager;
 use App\Http\Livewire\SuperAdmin\BumdesManager;
+use App\Http\Livewire\SuperAdmin\LogAktivitasViewer;
 use App\Http\Livewire\SuperAdmin\RegionManager;
 use App\Models\Bumdes;
 use App\Models\UnitUsaha;
@@ -36,6 +38,8 @@ Route::middleware(['auth', 'account.active'])->group(function (): void {
     Route::middleware(['role:super_admin'])->prefix('super-admin')->group(function (): void {
         Route::get('/region', RegionManager::class)->name('super-admin.region');
         Route::get('/bumdes', BumdesManager::class)->name('super-admin.bumdes');
+        Route::get('/akun', AkunManager::class)->name('super-admin.akun');
+        Route::get('/log-aktivitas', LogAktivitasViewer::class)->name('super-admin.log');
     });
 });
 

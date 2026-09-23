@@ -14,7 +14,7 @@
 | Dokumen resmi (PRD, architecture, dbml, api-spec, progress) | 🟢 Seluruhnya sinkron (v2.1/v2.0)                                                  |
 | Setup environment development (Laragon)                     | 🟢 Fondasi Laravel, paket, migration & asset selesai                               |
 | Migration & Model                                           | 🟢 Seluruh 12 tabel, Model Eloquent, dan Seeder wilayah+role+transaksional selesai |
-| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | 🟡 Service layer & fondasi Livewire selesai; 10 modul manager sedang dimulai  |
+| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | 🟡 Service layer selesai; 4/10 modul manager selesai (Region, Bumdes, Akun, Log) |
 | Portal Pengguna                                             | ⚪ Belum dimulai                                                                   |
 | Feedback & Notifikasi Real-time (Reverb)                    | 🟡 FeedbackService selesai; Reverb broadcast Livewire belum                       |
 | Ekspor Laporan                                              | 🟢 UnitTransaksiExport & BumdesLaporanExport Excel multi-sheet selesai              |
@@ -427,7 +427,15 @@ feat(livewire): tambah fondasi komponen data table reusable, status badge, dan l
 feat(super-admin): tambah modul livewire region manager dan bumdes manager
 ```
 
-**Checkpoint berikutnya:** bangun modul manager Super Admin berikutnya (`AkunManager` & `LogAktivitasViewer`) untuk manajemen akun berjenjang dan audit trail aktivitas sesuai PRD Bab 7.1-7.2 & FR-24, FR-32.
+**Checkpoint 25 (23 September 2026):** Modul manager Super Admin akun pengguna dan log audit selesai (`AkunManager` & `LogAktivitasViewer`). `AkunManager` (`app/Http/Livewire/SuperAdmin/AkunManager.php`) menyediakan pengelolaan akun berjenjang (9 role: Super Admin hingga Pengguna) berbasis `Shared\DataTable` yang terintegrasi dengan `AkunService::create()`, pencarian ID/nama/username, filter role, BUMDes, dan status aktif, modal CRUD akun berjenjang, modal reset password manual oleh Super Admin (FR-24), serta toggle status aktif/nonaktif akun dengan proteksi diri. `LogAktivitasViewer` (`app/Http/Livewire/SuperAdmin/LogAktivitasViewer.php`) menyajikan audit trail aktivitas sistem Spatie dengan pencarian deskripsi/modul/pelaku, filter modul (`log_name`), aksi (`event`), rentang tanggal (`dari_tanggal`, `sampai_tanggal`), serta modal dialog penampil payload perubahan JSON (`properties`). Migration `2026_09_23_110000_change_activity_log_morph_keys_to_string.php` ditambahkan untuk mendukung morph keys string/UUID (`subject_id` & `causer_id` `VARCHAR(50)`) pada tabel `activity_log`. Route panel didaftarkan di `routes/web.php` (`super-admin.akun` dan `super-admin.log`). Diagnostics/syntax `php -l` bersih, Laravel Pint lulus, focused test `SuperAdminAccountAndLogTest` lulus 7 test/58 assertions, full suite lulus 79 test/428 assertions. Development seeder berhasil dijalankan ulang secara idempotent.
+
+**Commit:**
+
+```
+feat(super-admin): tambah modul livewire akun manager dan log aktivitas viewer
+```
+
+**Checkpoint berikutnya:** bangun modul operasional BUMDes (`UnitManager` & `PelangganManager`) untuk pengelolaan unit usaha dan data pelanggan/warga per BUMDes di panel operasional sesuai PRD Bab 7.3 & FR-09, FR-11, FR-12.
 
 ---
 
