@@ -347,7 +347,15 @@ feat(console): tambah generator iuran bulanan idempotent
 feat(console): tambah automation referral dan pencairan kas
 ```
 
-**Checkpoint berikutnya:** service dan middleware autentikasi akun aktif, rate limiting login, serta fondasi route login berbasis username.
+**Checkpoint 15 (23 September 2026):** fondasi autentikasi username selesai. `AuthController` menangani login/logout berbasis `username` + `password`, `EnsureAccountActive` menolak akun nonaktif setelah autentikasi, `RateLimiter::for('login')` membatasi 5 request per menit berdasarkan IP+username, dan route panel/login/logout tersedia. Halaman login Blade juga dirender dan diuji. Diagnostics, `php -l`, dan Laravel Pint bersih; seluruh test lulus 23 test/133 assertions.
+
+**Commit:**
+
+```
+feat(auth): tambah login username dan middleware akun aktif
+```
+
+**Checkpoint berikutnya:** konfigurasi RBAC route group dan policy ownership untuk panel internal, dimulai dari akses BUMDes/unit sesuai role.
 
 **Commit:**
 

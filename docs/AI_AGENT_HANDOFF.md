@@ -31,6 +31,8 @@ The current scheduler pattern uses Laravel 11 `withSchedule` in `bootstrap/app.p
 
 Referral automation uses `referral:expire-check` hourly and `referral:verify-check` daily. Expired active codes receive a replacement active code; pending referrals past 15 days become `cair` when the recipient has transaction activity, which also creates a Rp10.000 incoming referral mutation in the recipient cash ledger, otherwise they become `gagal`.
 
+Authentication uses `AuthController` with `username` + `password`, `EnsureAccountActive` after `auth`, and `RateLimiter::for('login')` at five requests per minute per IP+username. The login page is `resources/views/auth/login.blade.php`; protected panel routes use `auth` and `account.active` middleware.
+
 ## Checkpoint Pattern
 
 For one checkpoint only:
