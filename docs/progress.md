@@ -506,6 +506,16 @@ feat(operasional): tambah modul livewire transaksi manager dan transaksi policy
 feat(operasional): tambah modul livewire tagihan manager dan tagihan policy
 ```
 
+**Checkpoint 29 (24 September 2026):** modul operasional iuran bulanan BUMDes (`IuranPanel`) selesai. Ditambahkan `IuranBumdesPolicy` dengan otorisasi berjenjang (pembayaran oleh Bendahara/Admin BUMDes sendiri, verifikasi khusus Admin BUMDes Koordinator di kecamatan yang sama atau Super Admin, serta generate bulanan oleh Super Admin) dan didaftarkan di `AppServiceProvider`. Komponen Livewire `IuranPanel` dilengkapi 4 kartu ringkasan statistik (Belum Bayar, Menunggu Verifikasi, Lunas, Total Nilai Iuran), filter status, filter periode (bulan_tahun), filter BUMDes, modal pembayaran (pilihan sumber dana Kas/Luar Kas dan metode Transfer/Tunai terintegrasi file upload bukti ke storage), modal verifikasi koordinator (setujui lunas / tolak pengembalian dana kas otomatis), aksi manual generate bulanan, dan modal detail breakdown. Rute `/operasional/iuran` dan alias `/bumdes/iuran` terdaftar. Seluruh pengujian fitur di `BumdesIuranTest` (14 test/62 assertions) dan seluruh test suite (147 test/657 assertions) lulus 100%. Seeder idempotent terverifikasi.
+
+**Commit:**
+
+```
+feat(operasional): tambah modul livewire iuran panel dan iuran bumdes policy
+```
+
+*Checkpoint berikutnya:* **Checkpoint 30: Modul Program Referral BUMDes (`ReferralPanel` Livewire & `ReferralPolicy`)**.
+
 ### 6.5 Portal Pengguna & Notifikasi Real-time
 
 Komponen `CekTagihan` dan `UploadBukti` (dengan `wire:loading` untuk toleransi koneksi lambat). Notifikasi feedback/tagihan memakai **Laravel Reverb** — broadcast ke channel privat per BUMDes (`routes/channels.php`), diterima real-time oleh `NotifikasiBadge` via Laravel Echo (bukan lagi polling).
@@ -602,3 +612,4 @@ VPS Ubuntu 22.04 + Nginx + PHP-FPM + MySQL terinstal langsung, Supervisor untuk 
 | 24 September 2026          | Checkpoint 26 selesai: Modul operasional UnitManager dan PelangganManager Livewire, PelangganPolicy, routing operasional, dan 20 test operasional lulus 100% (total 99 test suite pass).                                                                                                                            |
 | 24 September 2026          | Checkpoint 27 selesai: Modul TransaksiManager Livewire dengan kartu statistik, TransaksiPolicy, modal CRUD/detail, filter periode, dan 16 test transaksi lulus 100% (total 115 test suite pass).                                                                                                                   |
 | 24 September 2026          | Checkpoint 28 selesai: Modul TagihanManager Livewire dengan 4 kartu statistik status, TagihanPolicy, pelunasan tunai, verifikasi bukti transfer, modal CRUD/detail, dan 18 test tagihan lulus 100% (total 133 test suite pass).                                                                                  |
+| 24 September 2026          | Checkpoint 29 selesai: Modul IuranPanel Livewire dengan 4 kartu statistik iuran, IuranBumdesPolicy, alur bayar transfer/kas, verifikasi koordinator kecamatan, generate bulanan, dan 14 test iuran lulus 100% (total 147 test suite pass).                                                                       |

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Livewire\Operasional\IuranPanel;
 use App\Http\Livewire\Operasional\PelangganManager;
 use App\Http\Livewire\Operasional\TagihanManager;
 use App\Http\Livewire\Operasional\TransaksiManager;
@@ -54,7 +55,10 @@ Route::middleware(['auth', 'account.active'])->group(function (): void {
             Route::get('/pelanggan', PelangganManager::class)->name('operasional.pelanggan');
             Route::get('/transaksi', TransaksiManager::class)->name('operasional.transaksi');
             Route::get('/tagihan', TagihanManager::class)->name('operasional.tagihan');
+            Route::get('/iuran', IuranPanel::class)->name('operasional.iuran');
         });
+
+    Route::get('/bumdes/iuran', fn () => redirect()->route('operasional.iuran'))->name('bumdes.iuran');
 });
 
 Route::get('/', function () {

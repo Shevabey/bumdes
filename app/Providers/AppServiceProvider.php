@@ -3,11 +3,13 @@
 namespace App\Providers;
 
 use App\Models\Bumdes;
+use App\Models\IuranBumdes;
 use App\Models\Pelanggan;
 use App\Models\Tagihan;
 use App\Models\Transaksi;
 use App\Models\UnitUsaha;
 use App\Policies\BumdesPolicy;
+use App\Policies\IuranBumdesPolicy;
 use App\Policies\PelangganPolicy;
 use App\Policies\TagihanPolicy;
 use App\Policies\TransaksiPolicy;
@@ -38,10 +40,11 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Pelanggan::class, PelangganPolicy::class);
         Gate::policy(Transaksi::class, TransaksiPolicy::class);
         Gate::policy(Tagihan::class, TagihanPolicy::class);
+        Gate::policy(IuranBumdes::class, IuranBumdesPolicy::class);
 
         RateLimiter::for('login', function (Request $request): Limit {
             return Limit::perMinute(5)->by(
-                $request->ip() . '|' . strtolower((string) $request->input('username')),
+                $request->ip().'|'.strtolower((string) $request->input('username')),
             );
         });
     }
