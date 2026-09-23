@@ -371,7 +371,15 @@ feat(auth): tambah policy ownership dan route rbac
 feat(auth): tambah service pembuatan akun berjenjang
 ```
 
-**Checkpoint berikutnya:** `TagihanService` untuk pembayaran tunai, upload bukti transfer, serta verifikasi/tolak tagihan sesuai role dan scope unit.
+**Checkpoint 18 (23 September 2026):** `TagihanService` selesai untuk state pembayaran tagihan. Service mendukung pembayaran tunai dari status `belum_bayar`/`ditolak` oleh Sekretaris, Bendahara, Admin Unit sesuai scope BUMDes/unit, upload bukti transfer oleh akun `pengguna` pemilik pelanggan, serta verifikasi/tolak transfer oleh Admin Unit unit terkait. Transisi status menjaga kontrak `belum_bayar`, `menunggu_verifikasi`, `lunas`, dan `ditolak`; timestamp verifikasi dapat dibuat deterministik dengan `Carbon` untuk test. Tidak ada migration/model baru. Diagnostics/syntax `php -l` bersih, migration berjalan tanpa `--force` dan tidak ada pending migration, Laravel Pint lulus, focused test `TagihanServiceTest` lulus 7 test/20 assertions, full suite lulus 37 test/178 assertions. `composer dump-autoload` berhasil dengan warning Git dubious ownership dari Composer; development seeder berhasil dijalankan ulang. Tinker inspection berhasil setelah dijalankan di luar sandbox karena PsySH perlu menulis history ke profil Windows: 10 tagihan, 1 lunas, 1 menunggu verifikasi, 8 belum bayar.
+
+**Commit:**
+
+```
+feat(tagihan): tambah service pembayaran dan verifikasi tagihan
+```
+
+**Checkpoint berikutnya:** perluas `IuranService` untuk bayar iuran dari kas/luar kas, metode transfer/tunai, dan verifikasi koordinator sesuai scope BUMDes koordinator.
 
 **Commit:**
 
