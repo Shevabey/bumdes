@@ -14,7 +14,7 @@
 | Dokumen resmi (PRD, architecture, dbml, api-spec, progress) | 🟢 Seluruhnya sinkron (v2.1/v2.0)                                                  |
 | Setup environment development (Laragon)                     | 🟢 Fondasi Laravel, paket, migration & asset selesai                               |
 | Migration & Model                                           | 🟢 Seluruh 12 tabel, Model Eloquent, dan Seeder wilayah+role+transaksional selesai |
-| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | 🟡 Service layer selesai; 6/10 modul manager selesai (Region, Bumdes, Akun, Log, Unit, Pelanggan) |
+| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | 🟡 Service layer selesai; 7/10 modul manager selesai (Region, Bumdes, Akun, Log, Unit, Pelanggan, Transaksi) |
 | Portal Pengguna                                             | ⚪ Belum dimulai                                                                   |
 | Feedback & Notifikasi Real-time (Reverb)                    | 🟡 FeedbackService selesai; Reverb broadcast Livewire belum                       |
 | Ekspor Laporan                                              | 🟢 UnitTransaksiExport & BumdesLaporanExport Excel multi-sheet selesai              |
@@ -490,6 +490,14 @@ Bangun komponen `Shared\DataTable` reusable dulu (search + filter + pagination, 
 feat(operasional): tambah modul livewire unit manager dan pelanggan manager
 ```
 
+**Checkpoint 27 (24 September 2026):** modul keuangan & transaksi unit usaha (`TransaksiManager`) selesai. Ditambahkan `TransaksiPolicy` berjenjang yang membatasi hak akses pencatatan transaksi (Admin Unit hanya unitnya, Bendahara/Admin BUMDes/Sekretaris dalam BUMDes-nya, Super Admin global) serta didaftarkan di `AppServiceProvider`. Komponen Livewire `TransaksiManager` dilengkapi ringkasan statistik (Total Pemasukan, Total Pengeluaran, Saldo Kas Bersih), filter tipe (input/output), filter unit, filter rentang tanggal, search (ID, keterangan, kategori, unit), sorting, modal create/edit dengan format ID `TRX-{Ymd}-{00000X}`, dan modal detail transaksi. Rute `/operasional/transaksi` terdaftar. Seluruh pengujian fitur di `BumdesTransaksiTest` (16 test/53 assertions) dan seluruh test suite (115 test/535 assertions) lulus 100%.
+
+**Commit:**
+
+```
+feat(operasional): tambah modul livewire transaksi manager dan transaksi policy
+```
+
 ### 6.5 Portal Pengguna & Notifikasi Real-time
 
 Komponen `CekTagihan` dan `UploadBukti` (dengan `wire:loading` untuk toleransi koneksi lambat). Notifikasi feedback/tagihan memakai **Laravel Reverb** — broadcast ke channel privat per BUMDes (`routes/channels.php`), diterima real-time oleh `NotifikasiBadge` via Laravel Echo (bukan lagi polling).
@@ -584,3 +592,4 @@ VPS Ubuntu 22.04 + Nginx + PHP-FPM + MySQL terinstal langsung, Supervisor untuk 
 | 22 September 2026          | Setup fondasi selesai: tabel migration, permission, activity log, dan session berhasil dibuat; konfigurasi broadcast diarahkan ke Reverb, filesystem ke public, storage link dibuat, dan Vite production build berhasil.                                                                                          |
 | 22 September 2026          | Verifikasi checkpoint setup lulus: `php artisan test` menghasilkan 2 test lulus (2 assertions); `php artisan migrate` tidak memiliki migration tertunda.                                                                                                                                                          |
 | 24 September 2026          | Checkpoint 26 selesai: Modul operasional UnitManager dan PelangganManager Livewire, PelangganPolicy, routing operasional, dan 20 test operasional lulus 100% (total 99 test suite pass).                                                                                                                            |
+| 24 September 2026          | Checkpoint 27 selesai: Modul TransaksiManager Livewire dengan kartu statistik, TransaksiPolicy, modal CRUD/detail, filter periode, dan 16 test transaksi lulus 100% (total 115 test suite pass).                                                                                                                   |
