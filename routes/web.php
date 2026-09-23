@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Livewire\SuperAdmin\BumdesManager;
+use App\Http\Livewire\SuperAdmin\RegionManager;
 use App\Models\Bumdes;
 use App\Models\UnitUsaha;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +32,11 @@ Route::middleware(['auth', 'account.active'])->group(function (): void {
         ->get('/monitoring', function () {
             return response()->json(['monitoring' => true]);
         })->name('monitoring.dashboard');
+
+    Route::middleware(['role:super_admin'])->prefix('super-admin')->group(function (): void {
+        Route::get('/region', RegionManager::class)->name('super-admin.region');
+        Route::get('/bumdes', BumdesManager::class)->name('super-admin.bumdes');
+    });
 });
 
 Route::get('/', function () {

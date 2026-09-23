@@ -419,7 +419,15 @@ feat(reports): tambah ekspor laporan Excel per unit dan per BUMDes dengan filter
 feat(livewire): tambah fondasi komponen data table reusable, status badge, dan layout panel internal
 ```
 
-**Checkpoint berikutnya:** bangun modul manager Super Admin (`RegionManager` & `BumdesManager`) berbasis `Shared\DataTable` dan modal form CRUD/toggle status sesuai PRD Bab 7.1-7.2.
+**Checkpoint 24 (23 September 2026):** Modul manager Super Admin selesai (`RegionManager` & `BumdesManager`). `RegionManager` (`app/Http/Livewire/SuperAdmin/RegionManager.php`) menyediakan pengelolaan wilayah hierarki Kemendagri berbasis `Shared\DataTable` dengan pencarian kode/nama, filter `jenis_wilayah`, modal CRUD wilayah, toggle koordinator pusat kecamatan (`is_koordinator`), dan validasi proteksi penghapusan wilayah berelasi. `BumdesManager` (`app/Http/Livewire/SuperAdmin/BumdesManager.php`) menyediakan pengelolaan BUMDes dengan pencarian ID/nama, filter status aktif, modal CRUD BUMDes terhubung ke wilayah kelurahan, dan aksi toggle status aktif/nonaktif (FR-08) khusus Super Admin. Route panel Super Admin didaftarkan di `routes/web.php` dengan middleware `role:super_admin` (`super-admin.region` dan `super-admin.bumdes`). Diagnostics/syntax `php -l` bersih, Laravel Pint lulus, focused test `SuperAdminManagersTest` lulus 3 test/51 assertions, full suite lulus 72 test/370 assertions. Development seeder berhasil dijalankan ulang secara idempotent.
+
+**Commit:**
+
+```
+feat(super-admin): tambah modul livewire region manager dan bumdes manager
+```
+
+**Checkpoint berikutnya:** bangun modul manager Super Admin berikutnya (`AkunManager` & `LogAktivitasViewer`) untuk manajemen akun berjenjang dan audit trail aktivitas sesuai PRD Bab 7.1-7.2 & FR-24, FR-32.
 
 ---
 
