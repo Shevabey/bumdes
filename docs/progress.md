@@ -323,7 +323,15 @@ feat(database): tambah feedback dan status tindak lanjut
 
 Dokumen handoff agent tersedia di `docs/AI_AGENT_HANDOFF.md`, berisi sumber acuan, pola checkpoint, aturan import/type hint, validasi, larangan command destruktif, urutan backend lalu frontend, dan format summary.
 
-**Checkpoint berikutnya:** mulai business logic backend untuk `ReportService`, termasuk agregasi untung-rugi per unit dan per BUMDes dengan filter periode.
+**Checkpoint 12 (23 September 2026):** `ReportService` selesai untuk agregasi input, output, dan untung-rugi per unit serta per BUMDes. Filter periode `mingguan` dan `bulanan` tersedia; periode tidak dikenal ditolak dengan `InvalidArgumentException`. Diagnostics, `php -l`, dan Laravel Pint bersih; seluruh test lulus 15 test/90 assertions. Runtime report BUMDes Sendangsari pada fixture bulanan menghasilkan input Rp500.000, output Rp200.000, untung-rugi Rp300.000.
+
+**Commit:**
+
+```
+feat(report): tambah agregasi untung rugi per unit dan bumdes
+```
+
+**Checkpoint berikutnya:** business logic `IuranService` dan command scheduler `iuran:generate-bulanan` untuk membuat iuran otomatis setiap tanggal 1.
 
 **Commit:**
 
