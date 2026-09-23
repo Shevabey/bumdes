@@ -23,6 +23,6 @@ class FeedbackTest extends TestCase
         $this->assertSame('pengawas1', $feedback->firstWhere('id_feedback', 'FB-000001')->pengirim->username);
         $this->assertNull($feedback->firstWhere('id_feedback', 'FB-000001')->unit);
         $this->assertSame('PAMDes SDS', $feedback->firstWhere('id_feedback', 'FB-000002')->unit->nama_unit);
-        $this->assertTrue($feedback->every(fn (Feedback $note): bool => $note->bumdes !== null && $note->pengirim !== null));
+        $this->assertTrue($feedback->every(fn(Feedback $note): bool => $note->bumdes !== null && $note->pengirim !== null));
     }
 }
