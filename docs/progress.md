@@ -379,7 +379,15 @@ feat(auth): tambah service pembuatan akun berjenjang
 feat(tagihan): tambah service pembayaran dan verifikasi tagihan
 ```
 
-**Checkpoint berikutnya:** perluas `IuranService` untuk bayar iuran dari kas/luar kas, metode transfer/tunai, dan verifikasi koordinator sesuai scope BUMDes koordinator.
+**Checkpoint 19 (23 September 2026):** `IuranService` diperluas untuk pembayaran dan verifikasi koordinator. Service mendukung pembayaran iuran dari kas (mengurangi saldo `KasBumdes`, mencatat `KasMutasi` keluar, dan validasi kecukupan saldo) maupun luar kas, metode transfer (wajib upload bukti bayar) atau tunai oleh Bendahara / Admin BUMDes pemilik iuran. Verifikasi dilakukan oleh Admin BUMDes Koordinator di kecamatan yang sama (`kelurahan->is_koordinator = true` dan satu `parent_id` kecamatan) atau Super Admin; persetujuan mengubah status menjadi `lunas`, sedangkan penolakan mengembalikan status ke `belum_bayar` dan mengembalikan (refund) saldo kas jika dibayar dari kas. Tidak ada migration/model baru. Diagnostics/syntax `php -l` bersih, migration berjalan tanpa `--force` dan tidak ada pending migration, Laravel Pint lulus, focused test `IuranServiceTest` lulus 9 test/36 assertions, full suite lulus 44 test/205 assertions. Development seeder berhasil dijalankan ulang secara idempotent; Tinker inspection mengonfirmasi 2 iuran, 2 kas, dan 3 mutasi kas.
+
+**Commit:**
+
+```
+feat(iuran): tambah alur pembayaran iuran dan verifikasi koordinator
+```
+
+**Checkpoint berikutnya:** bangun `ReferralService` untuk state machine lengkap referral antar-BUMDes (generate kode unik 5 hari, redeem, dan tracking status).
 
 **Commit:**
 
