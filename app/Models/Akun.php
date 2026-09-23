@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Bumdes as BumdesModel;
+use App\Models\Feedback as FeedbackModel;
 use App\Models\IuranBumdes as IuranBumdesModel;
 use App\Models\Tagihan as TagihanModel;
 use App\Models\Transaksi as TransaksiModel;
@@ -92,5 +93,10 @@ class Akun extends Model implements AuthenticatableContract
     public function iuranDiverifikasi(): HasMany
     {
         return $this->hasMany(IuranBumdesModel::class, 'diverifikasi_oleh', 'id_akun');
+    }
+
+    public function feedbackDikirim(): HasMany
+    {
+        return $this->hasMany(FeedbackModel::class, 'dari_id_akun', 'id_akun');
     }
 }

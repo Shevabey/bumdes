@@ -313,7 +313,17 @@ feat(database): tambah kas bumdes dan mutasi kas
 feat(database): tambah referral dan state verifikasi
 ```
 
-**Checkpoint berikutnya:** migration, model, seeder, dan test untuk `feedback`, termasuk status tindak lanjut dan relasi pengawas ke BUMDes/unit.
+**Checkpoint 11 (23 September 2026):** migration `feedback`, model `Feedback`, relasi pengirim ke akun serta target ke BUMDes/unit, dan `FeedbackSeeder` selesai. Seeder membuat 3 feedback dengan status tindak lanjut `belum`, `sedang`, dan `selesai`, termasuk target level BUMDes dan unit. Diagnostics, `php -l`, dan Laravel Pint bersih; seluruh test lulus 13 test/82 assertions. Migration dijalankan tanpa `--force`.
+
+**Commit:**
+
+```
+feat(database): tambah feedback dan status tindak lanjut
+```
+
+Dokumen handoff agent tersedia di `docs/AI_AGENT_HANDOFF.md`, berisi sumber acuan, pola checkpoint, aturan import/type hint, validasi, larangan command destruktif, urutan backend lalu frontend, dan format summary.
+
+**Checkpoint berikutnya:** mulai business logic backend untuk `ReportService`, termasuk agregasi untung-rugi per unit dan per BUMDes dengan filter periode.
 
 **Commit:**
 

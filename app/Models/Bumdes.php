@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Feedback as FeedbackModel;
 use App\Models\IuranBumdes as IuranBumdesModel;
 use App\Models\KasBumdes as KasBumdesModel;
 use App\Models\Referral as ReferralModel;
@@ -69,5 +70,10 @@ class Bumdes extends Model
     public function referralsDiterima(): HasMany
     {
         return $this->hasMany(ReferralModel::class, 'id_bumdes_penerima', 'id_bumdes');
+    }
+
+    public function feedback(): HasMany
+    {
+        return $this->hasMany(FeedbackModel::class, 'ke_id_bumdes', 'id_bumdes');
     }
 }

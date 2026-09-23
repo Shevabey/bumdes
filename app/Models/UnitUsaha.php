@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Bumdes as BumdesModel;
+use App\Models\Feedback as FeedbackModel;
 use App\Models\Tagihan as TagihanModel;
 use App\Models\Transaksi as TransaksiModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -57,5 +58,10 @@ class UnitUsaha extends Model
     public function tagihan(): HasMany
     {
         return $this->hasMany(TagihanModel::class, 'id_unit', 'id_unit');
+    }
+
+    public function feedback(): HasMany
+    {
+        return $this->hasMany(FeedbackModel::class, 'ke_id_unit', 'id_unit');
     }
 }

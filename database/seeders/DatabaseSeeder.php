@@ -22,5 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call(IuranBumdesSeeder::class);
         $this->call(KasSeeder::class);
         $this->call(ReferralSeeder::class);
+        $this->call(FeedbackSeeder::class);
     }
 }
