@@ -9,18 +9,21 @@ use App\Models\Tagihan as TagihanModel;
 use App\Models\Transaksi as TransaksiModel;
 use App\Models\UnitUsaha as UnitUsahaModel;
 use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Foundation\Auth\Access\Authorizable as AuthorizableTrait;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-class Akun extends Model implements AuthenticatableContract
+class Akun extends Model implements AuthenticatableContract, AuthorizableContract
 {
     use AuthenticatableTrait;
+    use AuthorizableTrait;
     use HasFactory;
     use HasRoles;
     use Notifiable;

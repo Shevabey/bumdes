@@ -33,6 +33,8 @@ Referral automation uses `referral:expire-check` hourly and `referral:verify-che
 
 Authentication uses `AuthController` with `username` + `password`, `EnsureAccountActive` after `auth`, and `RateLimiter::for('login')` at five requests per minute per IP+username. The login page is `resources/views/auth/login.blade.php`; protected panel routes use `auth` and `account.active` middleware.
 
+RBAC uses explicit Gate policy registration in `AppServiceProvider`, `BumdesPolicy`/`UnitUsahaPolicy` ownership checks, and Spatie middleware aliases registered in `bootstrap/app.php`. For multiple roles in a Spatie route middleware, use `role:role_a|role_b`; commas are interpreted as guard arguments by the installed package version.
+
 ## Checkpoint Pattern
 
 For one checkpoint only:

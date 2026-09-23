@@ -355,7 +355,15 @@ feat(console): tambah automation referral dan pencairan kas
 feat(auth): tambah login username dan middleware akun aktif
 ```
 
-**Checkpoint berikutnya:** konfigurasi RBAC route group dan policy ownership untuk panel internal, dimulai dari akses BUMDes/unit sesuai role.
+**Checkpoint 16 (23 September 2026):** RBAC panel internal selesai untuk BUMDes/unit. `BumdesPolicy` dan `UnitUsahaPolicy` menerapkan akses global monitoring, ownership `id_bumdes`/`id_unit`, serta pembatasan update/toggle status. Gate policy didaftarkan eksplisit; alias middleware Spatie (`role`, `permission`, `role_or_permission`) didaftarkan di bootstrap Laravel 11; route panel memakai `can:` dan route monitoring memakai multi-role separator `|`. Diagnostics, `php -l`, dan Laravel Pint bersih; seluruh test lulus 25 test/140 assertions.
+
+**Commit:**
+
+```
+feat(auth): tambah policy ownership dan route rbac
+```
+
+**Checkpoint berikutnya:** `AkunService` untuk aturan pembuatan akun berjenjang sesuai role pembuat dan target dari PRD.
 
 **Commit:**
 
