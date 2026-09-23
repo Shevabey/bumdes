@@ -363,7 +363,15 @@ feat(auth): tambah login username dan middleware akun aktif
 feat(auth): tambah policy ownership dan route rbac
 ```
 
-**Checkpoint berikutnya:** `AkunService` untuk aturan pembuatan akun berjenjang sesuai role pembuat dan target dari PRD.
+**Checkpoint 17 (23 September 2026):** `AkunService::create()` selesai untuk aturan pembuatan akun berjenjang sesuai PRD. Super Admin dapat membuat akun role apa pun termasuk akses portal pelanggan di BUMDes mana pun; Admin BUMDes hanya dapat membuat tim internal (`sekretaris`, `bendahara`, `admin_unit`) di BUMDes sendiri; Sekretaris dan Admin Unit hanya dapat memberi akses `pengguna` ke pelanggan terdaftar dalam scope BUMDes/unit masing-masing. Service membuat ID `AKN-*` berikutnya, hash `password_hash`, sync role Spatie, dan menghubungkan akun `pengguna` ke data `pelanggan` yang belum memiliki login. Diagnostics/syntax `php -l` bersih, migration berjalan tanpa `--force` dan tidak ada pending migration, Laravel Pint lulus, focused test `AkunServiceTest` lulus 5 test/18 assertions, full suite lulus 30 test/158 assertions. `composer dump-autoload` berhasil dengan warning Git dubious ownership dari Composer; development seeder berhasil dijalankan ulang. Tinker inspection berhasil setelah dijalankan di luar sandbox karena PsySH perlu menulis history ke profil Windows: 10 akun, 9 role, dan `pengguna.sds` tetap terhubung ke `PLG-UNT-BMD-SDS-001-PAM-01-0001`.
+
+**Commit:**
+
+```
+feat(auth): tambah service pembuatan akun berjenjang
+```
+
+**Checkpoint berikutnya:** `TagihanService` untuk pembayaran tunai, upload bukti transfer, serta verifikasi/tolak tagihan sesuai role dan scope unit.
 
 **Commit:**
 
