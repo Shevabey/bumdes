@@ -14,7 +14,7 @@
 | Dokumen resmi (PRD, architecture, dbml, api-spec, progress) | 🟢 Seluruhnya sinkron (v2.1/v2.0)                                                  |
 | Setup environment development (Laragon)                     | 🟢 Fondasi Laravel, paket, migration & asset selesai                               |
 | Migration & Model                                           | 🟢 Seluruh 12 tabel, Model Eloquent, dan Seeder wilayah+role+transaksional selesai |
-| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | 🟡 Service layer selesai (Akun, Tagihan, Iuran, Referral, Report); Livewire belum  |
+| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | 🟡 Service layer & fondasi Livewire selesai; 10 modul manager sedang dimulai  |
 | Portal Pengguna                                             | ⚪ Belum dimulai                                                                   |
 | Feedback & Notifikasi Real-time (Reverb)                    | 🟡 FeedbackService selesai; Reverb broadcast Livewire belum                       |
 | Ekspor Laporan                                              | 🟢 UnitTransaksiExport & BumdesLaporanExport Excel multi-sheet selesai              |
@@ -411,7 +411,15 @@ feat(feedback): tambah service pencatatan feedback dan status tindak lanjut
 feat(reports): tambah ekspor laporan Excel per unit dan per BUMDes dengan filter periode
 ```
 
-**Checkpoint berikutnya:** bangun fondasi komponen UI Livewire `Shared\DataTable` dan layout tabel terstandar untuk panel internal.
+**Checkpoint 23 (23 September 2026):** Fondasi komponen UI Livewire selesai (`Shared\DataTable`, Layout Panel, `StatusBadge`, `SearchFilterBar`). `config/livewire.php` mengatur root class namespace `App\Http\Livewire` dan default layout `layouts.panel`. Komponen `Shared\DataTable` (`app/Http/Livewire/Shared/DataTable.php`) menyediakan logika tabel reusable: pagination dengan `WithPagination`, pencarian real-time debounce, reset filter, sorting asc/desc dinamis, query string persistence, dan per-page selector. View `data-table.blade.php` menyajikan tabel modern berbasis Tailwind CSS dengan search bar terintegrasi, filter controls, table head indikator sort, empty state informatif, dan pagination footer. Komponen `status-badge.blade.php` memetakan status transaksi, tagihan, iuran, referral, feedback, dan status aktif entitas ke badge warna harmonis (hijau, kuning, oranye, merah, biru, abu). Komponen `layouts/panel.blade.php` menyajikan layout panel internal terpadu dengan topbar profil/logout dan sidebar navigasi berbasis role Spatie (`super_admin`, `admin_bumdes`/`sekretaris`/`bendahara`/`admin_unit`, `pengawas`/`penasihat`/`direktur`). Diagnostics/syntax `php -l` bersih, Laravel Pint lulus, focused test `LivewireDataTableTest` lulus 5 test/33 assertions, full suite lulus 69 test/319 assertions. Development seeder berhasil dijalankan ulang secara idempotent.
+
+**Commit:**
+
+```
+feat(livewire): tambah fondasi komponen data table reusable, status badge, dan layout panel internal
+```
+
+**Checkpoint berikutnya:** bangun modul manager Super Admin (`RegionManager` & `BumdesManager`) berbasis `Shared\DataTable` dan modal form CRUD/toggle status sesuai PRD Bab 7.1-7.2.
 
 ---
 
