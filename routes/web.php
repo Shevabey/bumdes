@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Livewire\Operasional\PelangganManager;
+use App\Http\Livewire\Operasional\TagihanManager;
 use App\Http\Livewire\Operasional\TransaksiManager;
 use App\Http\Livewire\Operasional\UnitManager;
 use App\Http\Livewire\SuperAdmin\AkunManager;
@@ -52,6 +53,7 @@ Route::middleware(['auth', 'account.active'])->group(function (): void {
             Route::get('/unit-usaha', UnitManager::class)->name('operasional.unit');
             Route::get('/pelanggan', PelangganManager::class)->name('operasional.pelanggan');
             Route::get('/transaksi', TransaksiManager::class)->name('operasional.transaksi');
+            Route::get('/tagihan', TagihanManager::class)->name('operasional.tagihan');
         });
 });
 

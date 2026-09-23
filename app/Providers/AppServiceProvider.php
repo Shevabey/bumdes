@@ -4,10 +4,12 @@ namespace App\Providers;
 
 use App\Models\Bumdes;
 use App\Models\Pelanggan;
+use App\Models\Tagihan;
 use App\Models\Transaksi;
 use App\Models\UnitUsaha;
 use App\Policies\BumdesPolicy;
 use App\Policies\PelangganPolicy;
+use App\Policies\TagihanPolicy;
 use App\Policies\TransaksiPolicy;
 use App\Policies\UnitUsahaPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -35,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(UnitUsaha::class, UnitUsahaPolicy::class);
         Gate::policy(Pelanggan::class, PelangganPolicy::class);
         Gate::policy(Transaksi::class, TransaksiPolicy::class);
+        Gate::policy(Tagihan::class, TagihanPolicy::class);
 
         RateLimiter::for('login', function (Request $request): Limit {
             return Limit::perMinute(5)->by(

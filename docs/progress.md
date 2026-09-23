@@ -14,7 +14,7 @@
 | Dokumen resmi (PRD, architecture, dbml, api-spec, progress) | 🟢 Seluruhnya sinkron (v2.1/v2.0)                                                  |
 | Setup environment development (Laragon)                     | 🟢 Fondasi Laravel, paket, migration & asset selesai                               |
 | Migration & Model                                           | 🟢 Seluruh 12 tabel, Model Eloquent, dan Seeder wilayah+role+transaksional selesai |
-| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | 🟡 Service layer selesai; 7/10 modul manager selesai (Region, Bumdes, Akun, Log, Unit, Pelanggan, Transaksi) |
+| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | 🟡 Service layer selesai; 8/10 modul manager selesai (Region, Bumdes, Akun, Log, Unit, Pelanggan, Transaksi, Tagihan) |
 | Portal Pengguna                                             | ⚪ Belum dimulai                                                                   |
 | Feedback & Notifikasi Real-time (Reverb)                    | 🟡 FeedbackService selesai; Reverb broadcast Livewire belum                       |
 | Ekspor Laporan                                              | 🟢 UnitTransaksiExport & BumdesLaporanExport Excel multi-sheet selesai              |
@@ -498,6 +498,14 @@ feat(operasional): tambah modul livewire unit manager dan pelanggan manager
 feat(operasional): tambah modul livewire transaksi manager dan transaksi policy
 ```
 
+**Checkpoint 28 (24 September 2026):** modul pengelolaan tagihan pelanggan (`TagihanManager`) selesai. Ditambahkan `TagihanPolicy` dengan otorisasi berjenjang (termasuk `bayarTunai` dan `verifikasiTransfer`) serta didaftarkan di `AppServiceProvider`. Komponen Livewire `TagihanManager` dilengkapi 4 kartu ringkasan status (Belum Bayar, Menunggu Verifikasi, Lunas, Total Nilai Tagihan), aksi pembayaran tunai langsung via `TagihanService::bayarTunai()`, modal verifikasi transfer (setujui / tolak) via `TagihanService::verifikasiTransfer()`, modal buat tagihan baru ber-prefix `TAG-{Ymd}-{00000X}`, filter status & unit, sorting, dan modal detail. Rute `/operasional/tagihan` terdaftar. Seluruh pengujian fitur di `BumdesTagihanTest` (18 test/60 assertions) dan seluruh test suite (133 test/595 assertions) lulus 100%.
+
+**Commit:**
+
+```
+feat(operasional): tambah modul livewire tagihan manager dan tagihan policy
+```
+
 ### 6.5 Portal Pengguna & Notifikasi Real-time
 
 Komponen `CekTagihan` dan `UploadBukti` (dengan `wire:loading` untuk toleransi koneksi lambat). Notifikasi feedback/tagihan memakai **Laravel Reverb** — broadcast ke channel privat per BUMDes (`routes/channels.php`), diterima real-time oleh `NotifikasiBadge` via Laravel Echo (bukan lagi polling).
@@ -593,3 +601,4 @@ VPS Ubuntu 22.04 + Nginx + PHP-FPM + MySQL terinstal langsung, Supervisor untuk 
 | 22 September 2026          | Verifikasi checkpoint setup lulus: `php artisan test` menghasilkan 2 test lulus (2 assertions); `php artisan migrate` tidak memiliki migration tertunda.                                                                                                                                                          |
 | 24 September 2026          | Checkpoint 26 selesai: Modul operasional UnitManager dan PelangganManager Livewire, PelangganPolicy, routing operasional, dan 20 test operasional lulus 100% (total 99 test suite pass).                                                                                                                            |
 | 24 September 2026          | Checkpoint 27 selesai: Modul TransaksiManager Livewire dengan kartu statistik, TransaksiPolicy, modal CRUD/detail, filter periode, dan 16 test transaksi lulus 100% (total 115 test suite pass).                                                                                                                   |
+| 24 September 2026          | Checkpoint 28 selesai: Modul TagihanManager Livewire dengan 4 kartu statistik status, TagihanPolicy, pelunasan tunai, verifikasi bukti transfer, modal CRUD/detail, dan 18 test tagihan lulus 100% (total 133 test suite pass).                                                                                  |
