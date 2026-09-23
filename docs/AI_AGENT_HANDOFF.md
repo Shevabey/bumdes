@@ -27,6 +27,8 @@ Do not invent a competing design. Preserve existing model names, table names, ID
 - Do not introduce Docker at this stage.
 - Development `.env` uses database `bumdes` and database-backed sessions.
 
+The current scheduler pattern uses Laravel 11 `withSchedule` in `bootstrap/app.php`, not a static `Schedule::command()` call in `routes/console.php`. The monthly iuran command is `iuran:generate-bulanan`; it accepts `--bulan=YYYY-MM` for deterministic tests and creates Rp50.000 records only for active BUMDes.
+
 ## Checkpoint Pattern
 
 For one checkpoint only:

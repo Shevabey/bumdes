@@ -331,7 +331,15 @@ Dokumen handoff agent tersedia di `docs/AI_AGENT_HANDOFF.md`, berisi sumber acua
 feat(report): tambah agregasi untung rugi per unit dan bumdes
 ```
 
-**Checkpoint berikutnya:** business logic `IuranService` dan command scheduler `iuran:generate-bulanan` untuk membuat iuran otomatis setiap tanggal 1.
+**Checkpoint 13 (23 September 2026):** `IuranService::generateBulanan()` dan command `iuran:generate-bulanan` selesai. Generator hanya memproses BUMDes aktif, membuat iuran Rp50.000 secara idempotent, dan tidak menimpa record yang sudah ada. Scheduler Laravel terdaftar setiap tanggal 1 pukul 00:05 melalui `bootstrap/app.php`; opsi `--bulan=YYYY-MM` tersedia untuk eksekusi deterministik. Diagnostics, `php -l`, dan Laravel Pint bersih; `schedule:list` menampilkan jadwal; seluruh test lulus 17 test/99 assertions. Runtime command membuat 2 iuran untuk periode `2026-12`.
+
+**Commit:**
+
+```
+feat(console): tambah generator iuran bulanan idempotent
+```
+
+**Checkpoint berikutnya:** command `referral:expire-check` dan `referral:verify-check` untuk otomatisasi state referral sesuai batas 5 hari dan 15 hari.
 
 **Commit:**
 
