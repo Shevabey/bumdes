@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Livewire\Operasional\PelangganManager;
+use App\Http\Livewire\Operasional\UnitManager;
 use App\Http\Livewire\SuperAdmin\AkunManager;
 use App\Http\Livewire\SuperAdmin\BumdesManager;
 use App\Http\Livewire\SuperAdmin\LogAktivitasViewer;
@@ -41,6 +43,14 @@ Route::middleware(['auth', 'account.active'])->group(function (): void {
         Route::get('/akun', AkunManager::class)->name('super-admin.akun');
         Route::get('/log-aktivitas', LogAktivitasViewer::class)->name('super-admin.log');
     });
+
+    // Operasional — diakses role BUMDes & Unit
+    Route::middleware(['role:super_admin|admin_bumdes|sekretaris|bendahara|admin_unit|direktur|pengawas|penasihat'])
+        ->prefix('operasional')
+        ->group(function (): void {
+            Route::get('/unit-usaha', UnitManager::class)->name('operasional.unit');
+            Route::get('/pelanggan', PelangganManager::class)->name('operasional.pelanggan');
+        });
 });
 
 Route::get('/', function () {

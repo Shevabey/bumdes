@@ -20,6 +20,11 @@ class UnitUsahaPolicy
         return $akun->id_bumdes === $unit->id_bumdes;
     }
 
+    public function create(Akun $akun): bool
+    {
+        return $akun->hasAnyRole(['super_admin', 'admin_bumdes']);
+    }
+
     public function update(Akun $akun, UnitUsaha $unit): bool
     {
         return $akun->hasRole('super_admin')

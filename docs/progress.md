@@ -14,7 +14,7 @@
 | Dokumen resmi (PRD, architecture, dbml, api-spec, progress) | 🟢 Seluruhnya sinkron (v2.1/v2.0)                                                  |
 | Setup environment development (Laragon)                     | 🟢 Fondasi Laravel, paket, migration & asset selesai                               |
 | Migration & Model                                           | 🟢 Seluruh 12 tabel, Model Eloquent, dan Seeder wilayah+role+transaksional selesai |
-| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | 🟡 Service layer selesai; 4/10 modul manager selesai (Region, Bumdes, Akun, Log) |
+| Fitur inti (CRUD, transaksi, tagihan, iuran, referral)      | 🟡 Service layer selesai; 6/10 modul manager selesai (Region, Bumdes, Akun, Log, Unit, Pelanggan) |
 | Portal Pengguna                                             | ⚪ Belum dimulai                                                                   |
 | Feedback & Notifikasi Real-time (Reverb)                    | 🟡 FeedbackService selesai; Reverb broadcast Livewire belum                       |
 | Ekspor Laporan                                              | 🟢 UnitTransaksiExport & BumdesLaporanExport Excel multi-sheet selesai              |
@@ -482,10 +482,12 @@ feat(console): tambah scheduled command iuran dan referral
 
 Bangun komponen `Shared\DataTable` reusable dulu (search + filter + pagination, lihat `architecture.md` Bab 5), baru komponen per modul: `RegionManager`, `BumdesManager`, `AkunManager`, `UnitManager`, `PelangganManager`, `TransaksiForm`, `TagihanManager`, `IuranPanel`, `ReferralPanel`, `DashboardNasional`, `FeedbackForm/List`, `LogAktivitasViewer`. Struktur route per role ada di `architecture.md` Bab 6.1.
 
+**Checkpoint 26 (24 September 2026):** modul operasional BUMDes (`UnitManager` dan `PelangganManager`) selesai. Ditambahkan `UnitUsahaPolicy::create()`, `PelangganPolicy` lengkap dengan scoping unit/BUMDes serta didaftarkan di `AppServiceProvider`. Komponen Livewire `UnitManager` dan `PelangganManager` mendukung DataTable sortable, filter, modal CRUD, auto-generate prefix ID, validasi enum jenis unit, toggle status operasional, serta route group `/operasional/*` dengan otorisasi berbasis role. Seluruh pengujian fitur di `BumdesOperationalTest` (20 test/54 assertions) dan seluruh test suite (99 test/482 assertions) lulus 100%.
+
 **Commit:**
 
 ```
-feat(panel): tambah komponen DataTable reusable dan manager CRUD 10 modul
+feat(operasional): tambah modul livewire unit manager dan pelanggan manager
 ```
 
 ### 6.5 Portal Pengguna & Notifikasi Real-time
@@ -581,3 +583,4 @@ VPS Ubuntu 22.04 + Nginx + PHP-FPM + MySQL terinstal langsung, Supervisor untuk 
 | 22 September 2026          | Dependensi fondasi terpasang: Livewire 3.8.9, Spatie Permission 6.25, Activitylog 4.12, Laravel Excel 3.1, dan Reverb 1.11. Database `bumdes` terdeteksi tetapi masih fresh; publish, migration, dan build asset menjadi checkpoint berikutnya.                                                                   |
 | 22 September 2026          | Setup fondasi selesai: tabel migration, permission, activity log, dan session berhasil dibuat; konfigurasi broadcast diarahkan ke Reverb, filesystem ke public, storage link dibuat, dan Vite production build berhasil.                                                                                          |
 | 22 September 2026          | Verifikasi checkpoint setup lulus: `php artisan test` menghasilkan 2 test lulus (2 assertions); `php artisan migrate` tidak memiliki migration tertunda.                                                                                                                                                          |
+| 24 September 2026          | Checkpoint 26 selesai: Modul operasional UnitManager dan PelangganManager Livewire, PelangganPolicy, routing operasional, dan 20 test operasional lulus 100% (total 99 test suite pass).                                                                                                                            |
