@@ -339,7 +339,15 @@ feat(report): tambah agregasi untung rugi per unit dan bumdes
 feat(console): tambah generator iuran bulanan idempotent
 ```
 
-**Checkpoint berikutnya:** command `referral:expire-check` dan `referral:verify-check` untuk otomatisasi state referral sesuai batas 5 hari dan 15 hari.
+**Checkpoint 14 (23 September 2026):** command `referral:expire-check` dan `referral:verify-check` selesai. Command expire menandai kode aktif lewat 5 hari sebagai `kedaluwarsa` dan menerbitkan kode aktif pengganti; command verify memproses pending lewat 15 hari, mencairkan Rp10.000 ke kas penerima bila ada transaksi aktivitas, atau menandai `gagal` bila tidak ada aktivitas. Scheduler terdaftar hourly dan daily bersama scheduler iuran. Diagnostics, `php -l`, dan Laravel Pint bersih; `schedule:list` menampilkan 3 jadwal; seluruh test lulus 19 test/109 assertions.
+
+**Commit:**
+
+```
+feat(console): tambah automation referral dan pencairan kas
+```
+
+**Checkpoint berikutnya:** service dan middleware autentikasi akun aktif, rate limiting login, serta fondasi route login berbasis username.
 
 **Commit:**
 

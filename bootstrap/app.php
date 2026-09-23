@@ -14,6 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withSchedule(function (Schedule $schedule): void {
         $schedule->command('iuran:generate-bulanan')->monthlyOn(1, '00:05');
+        $schedule->command('referral:expire-check')->hourly();
+        $schedule->command('referral:verify-check')->daily();
     })
     ->withMiddleware(function (Middleware $middleware) {
         //
