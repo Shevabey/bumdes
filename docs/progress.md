@@ -387,7 +387,15 @@ feat(tagihan): tambah service pembayaran dan verifikasi tagihan
 feat(iuran): tambah alur pembayaran iuran dan verifikasi koordinator
 ```
 
-**Checkpoint berikutnya:** bangun `ReferralService` untuk state machine lengkap referral antar-BUMDes (generate kode unik 5 hari, redeem, dan tracking status).
+**Checkpoint 20 (23 September 2026):** `ReferralService` selesai untuk state machine lengkap referral antar-BUMDes. Service mendukung penerbitan kode referral aktif 6 karakter (masa berlaku 5 hari) atau pengambilan kode aktif yang masih valid oleh Admin BUMDes pengaju/Super Admin; proses redeem oleh Admin BUMDes calon anggota penerima (mengubah status menjadi `pending`, menetapkan batas verifikasi 15 hari, validasi pencegahan self-referral dan pencegahan redeem berulang, serta menerbitkan kode aktif pengganti bagi pengaju); dan proses pencairan referral (`cair` dengan penambahan saldo kas penerima Rp10.000 dan pencatatan `KasMutasi` jika terdapat transaksi aktivitas pada periode redeem s.d. batas verifikasi, atau `gagal` jika tidak ada aktivitas). Tidak ada migration/model baru. Diagnostics/syntax `php -l` bersih, migration berjalan tanpa `--force` dan tidak ada pending migration, Laravel Pint lulus, focused test `ReferralServiceTest` lulus 8 test/29 assertions, full suite lulus 52 test/234 assertions. Development seeder berhasil dijalankan ulang secara idempotent; Tinker inspection mengonfirmasi 4 referral (1 aktif).
+
+**Commit:**
+
+```
+feat(referral): tambah service state machine referral antar bumdes
+```
+
+**Checkpoint berikutnya:** bangun `FeedbackService` untuk pengelolaan feedback pengawas/penasihat/direktur ke BUMDes/unit dan pembaruan status tindak lanjut (`belum`, `sedang`, `selesai`).
 
 **Commit:**
 
