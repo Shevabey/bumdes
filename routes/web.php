@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Livewire\Monitoring\DashboardNasional;
 use App\Http\Livewire\Operasional\IuranPanel;
 use App\Http\Livewire\Operasional\PelangganManager;
 use App\Http\Livewire\Operasional\ReferralPanel;
@@ -36,10 +37,10 @@ Route::middleware(['auth', 'account.active'])->group(function (): void {
         return response()->json(['id_unit' => $unit->id_unit]);
     })->name('panel.unit.show');
 
-    Route::middleware('role:pengawas|penasihat|direktur|super_admin')
-        ->get('/monitoring', function () {
-            return response()->json(['monitoring' => true]);
-        })->name('monitoring.dashboard');
+    Route::middleware(['role:pengawas|penasihat|direktur|super_admin'])->prefix('monitoring')->group(function (): void {
+        Route::get('/', DashboardNasional::class)->name('monitoring.dashboard');
+        Route::get('/dashboard', fn () => redirect()->route('monitoring.dashboard'))->name('monitoring.dashboard.alias');
+    });
 
     Route::middleware(['role:super_admin'])->prefix('super-admin')->group(function (): void {
         Route::get('/region', RegionManager::class)->name('super-admin.region');

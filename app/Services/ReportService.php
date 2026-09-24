@@ -58,6 +58,41 @@ class ReportService
     /**
      * @return array{total_input: float, total_output: float, untung_rugi: float}
      */
+    public function untungRugiNasional(?string $periode = null, Carbon|string|null $dariTanggal = null): array
+    {
+        $query = Transaksi::query();
+        $this->applyPeriode($query, $periode, $dariTanggal);
+
+        return $this->summarize($query);
+    }
+
+    /**
+     * Returns untung-rugi per unit breakdown for a given BUMDes.
+     *
+     * @return array<int, array{id_unit: string, nama_unit: string, total_input: float, total_output: float, untung_rugi: float}>
+     */
+    public function untungRugiBumdesWithUnits(string $idBumdes, ?string $periode = null, Carbon|string|null $dariTanggal = null): array
+    {
+        $units = UnitUsaha::query()
+            ->where('id_bumdes', $idBumdes)
+            ->get(['id_unit', 'nama_unit']);
+
+        return $units->map(function (UnitUsaha $unit) use ($periode, $dariTanggal): array {
+            $query = Transaksi::query()->where('id_unit', $unit->id_unit);
+            $this->applyPeriode($query, $periode, $dariTanggal);
+            $summary = $this->summarize($query);
+
+            return [
+                'id_unit' => $unit->id_unit,
+                'nama_unit' => $unit->nama_unit,
+                ...$summary,
+            ];
+        })->all();
+    }
+
+    /**
+     * @return array{total_input: float, total_output: float, untung_rugi: float}
+     */
     private function summarize(Builder $query): array
     {
         $totalInput = (float) $query->clone()->where('tipe', 'input')->sum('jumlah');

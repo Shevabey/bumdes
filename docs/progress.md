@@ -522,7 +522,15 @@ feat(operasional): tambah modul livewire iuran panel dan iuran bumdes policy
 feat(operasional): tambah modul livewire referral panel dan referral policy
 ```
 
-*Checkpoint berikutnya:* **Checkpoint 31: Modul Monitoring & Evaluasi Dashboard Nasional (`DashboardNasional` Livewire & Kebijakan Monitoring)**.
+**Checkpoint 31 (24 September 2026):** modul monitoring dan evaluasi dashboard nasional (`DashboardNasional` Livewire & ekstensi `ReportService`) selesai. Ditambahkan metode agregasi nasional di `ReportService` (`untungRugiNasional` dan `untungRugiBumdesWithUnits`) untuk mengkalkulasi omzet, pengeluaran, dan laba rugi konsolidasian seluruh BUMDes dan rincian per unit usaha. Komponen Livewire `DashboardNasional` menyajikan 4 kartu indikator otomatis (Total BUMDes Aktif, Menunggak Iuran, Unit Tanpa Aktivitas 7 hari terakhir, dan Verifikasi Tertunda), 4 kartu agregasi keuangan konsolidasian nasional (Saldo Kas Nasional, Total Omzet, Total Pengeluaran, Laba/Rugi Bersih Nasional), filter periode (bulanan/mingguan/semua), filter status iuran, pencarian nama/kode BUMDes/desa, tabel interaktif performa BUMDes dengan status badge, dan modal rincian unit usaha per BUMDes. Rute `/monitoring` dan `/monitoring/dashboard` terdaftar dengan proteksi middleware peran `pengawas|penasihat|direktur|super_admin`. Seluruh pengujian fitur di `DashboardNasionalTest` (13 test/84 assertions) dan seluruh test suite regresi (171 test/793 assertions) lulus 100%.
+
+**Commit:**
+
+```
+feat(monitoring): tambah modul livewire dashboard monitoring nasional dan agregasi report service
+```
+
+*Checkpoint berikutnya:* **Checkpoint 32: Modul Monitoring & Evaluasi Catatan & Feedback (`FeedbackManager` Livewire & `FeedbackPolicy`)**.
 
 ### 6.5 Portal Pengguna & Notifikasi Real-time
 
@@ -622,3 +630,4 @@ VPS Ubuntu 22.04 + Nginx + PHP-FPM + MySQL terinstal langsung, Supervisor untuk 
 | 24 September 2026          | Checkpoint 28 selesai: Modul TagihanManager Livewire dengan 4 kartu statistik status, TagihanPolicy, pelunasan tunai, verifikasi bukti transfer, modal CRUD/detail, dan 18 test tagihan lulus 100% (total 133 test suite pass).                                                                                  |
 | 24 September 2026          | Checkpoint 29 selesai: Modul IuranPanel Livewire dengan 4 kartu statistik iuran, IuranBumdesPolicy, alur bayar transfer/kas, verifikasi koordinator kecamatan, generate bulanan, dan 14 test iuran lulus 100% (total 147 test suite pass).                                                                       |
 | 24 September 2026          | Checkpoint 30 selesai: Modul ReferralPanel Livewire dengan hero card kode aktif, form redeem, 4 kartu statistik, ReferralPolicy, modal linimasa verifikasi, dan 11 test referral lulus 100% (total 158 test suite pass).                                                                            |
+| 24 September 2026          | Checkpoint 31 selesai: Modul DashboardNasional Livewire untuk eksekutif (Pengawas/Penasihat/Direktur/Super Admin), agregasi nasional di ReportService, 4 kartu indikator otomatis, 4 kartu keuangan konsolidasian, modal breakdown per unit usaha, dan 13 test monitoring lulus 100% (total 171 test suite pass). |
