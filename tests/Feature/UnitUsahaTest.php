@@ -23,6 +23,6 @@ class UnitUsahaTest extends TestCase
         $this->assertSame(10, UnitUsaha::count());
         $this->assertSame(5, $sendangsari->units()->count());
         $this->assertSame([], $units->first()->skema_field);
-        $this->assertTrue($units->every(fn(UnitUsaha $unit): bool => $unit->status_aktif));
+        $this->assertTrue($units->every(fn (UnitUsaha $unit): bool => $unit->status_aktif));
     }
 }

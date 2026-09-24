@@ -23,6 +23,6 @@ class TagihanTest extends TestCase
         $this->assertSame('tunai', $tagihan->firstWhere('status', 'lunas')->metode);
         $this->assertSame('transfer', $tagihan->firstWhere('status', 'menunggu_verifikasi')->metode);
         $this->assertNotNull($tagihan->firstWhere('status', 'lunas')->verifikator);
-        $this->assertTrue($tagihan->every(fn(Tagihan $invoice): bool => $invoice->pelanggan !== null && $invoice->unit !== null));
+        $this->assertTrue($tagihan->every(fn (Tagihan $invoice): bool => $invoice->pelanggan !== null && $invoice->unit !== null));
     }
 }

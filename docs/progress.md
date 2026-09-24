@@ -514,7 +514,15 @@ feat(operasional): tambah modul livewire tagihan manager dan tagihan policy
 feat(operasional): tambah modul livewire iuran panel dan iuran bumdes policy
 ```
 
-*Checkpoint berikutnya:* **Checkpoint 30: Modul Program Referral BUMDes (`ReferralPanel` Livewire & `ReferralPolicy`)**.
+**Checkpoint 30 (24 September 2026):** modul program referral BUMDes (`ReferralPanel` Livewire & `ReferralPolicy`) selesai. Ditambahkan `ReferralPolicy` dengan otorisasi berbasis peran (`generate` dan `redeem` untuk Super Admin & Admin BUMDes, `viewAny` & `view` sesuai scope relasi pengirim/penerima) serta didaftarkan di `AppServiceProvider`. Komponen Livewire `ReferralPanel` menyajikan banner kartu hero kode aktif terkini dengan fitur generate kode baru, form cepat penukaran (redeem) kode referral, 4 kartu ringkasan statistik (Kode Aktif, Menunggu Verifikasi, Insentif Cair, dan Gagal/Kedaluwarsa serta akumulasi nominal insentif Rp 10.000), filter status, filter relasi (semua / dikirim / diterima), pencarian kode/nama BUMDes, modal detail riwayat & linimasa verifikasi 15 hari. Rute `/referral` dan alias `/bumdes/referral` terdaftar. Seluruh pengujian fitur di `BumdesReferralTest` (11 test/52 assertions) dan seluruh test suite regresi (158 test/709 assertions) lulus 100%. DatabaseSeeder idempotent terverifikasi.
+
+**Commit:**
+
+```
+feat(operasional): tambah modul livewire referral panel dan referral policy
+```
+
+*Checkpoint berikutnya:* **Checkpoint 31: Modul Monitoring & Evaluasi Dashboard Nasional (`DashboardNasional` Livewire & Kebijakan Monitoring)**.
 
 ### 6.5 Portal Pengguna & Notifikasi Real-time
 
@@ -613,3 +621,4 @@ VPS Ubuntu 22.04 + Nginx + PHP-FPM + MySQL terinstal langsung, Supervisor untuk 
 | 24 September 2026          | Checkpoint 27 selesai: Modul TransaksiManager Livewire dengan kartu statistik, TransaksiPolicy, modal CRUD/detail, filter periode, dan 16 test transaksi lulus 100% (total 115 test suite pass).                                                                                                                   |
 | 24 September 2026          | Checkpoint 28 selesai: Modul TagihanManager Livewire dengan 4 kartu statistik status, TagihanPolicy, pelunasan tunai, verifikasi bukti transfer, modal CRUD/detail, dan 18 test tagihan lulus 100% (total 133 test suite pass).                                                                                  |
 | 24 September 2026          | Checkpoint 29 selesai: Modul IuranPanel Livewire dengan 4 kartu statistik iuran, IuranBumdesPolicy, alur bayar transfer/kas, verifikasi koordinator kecamatan, generate bulanan, dan 14 test iuran lulus 100% (total 147 test suite pass).                                                                       |
+| 24 September 2026          | Checkpoint 30 selesai: Modul ReferralPanel Livewire dengan hero card kode aktif, form redeem, 4 kartu statistik, ReferralPolicy, modal linimasa verifikasi, dan 11 test referral lulus 100% (total 158 test suite pass).                                                                            |

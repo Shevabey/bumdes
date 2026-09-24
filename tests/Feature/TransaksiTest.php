@@ -22,6 +22,6 @@ class TransaksiTest extends TestCase
         $this->assertSame('array', gettype($transactions->first()->detail));
         $this->assertSame('data seed development', $transactions->first()->detail['sumber']);
         $this->assertSame(10, $transactions->pluck('unit.id_unit')->unique()->count());
-        $this->assertTrue($transactions->every(fn(Transaksi $transaction): bool => $transaction->pencatat !== null));
+        $this->assertTrue($transactions->every(fn (Transaksi $transaction): bool => $transaction->pencatat !== null));
     }
 }

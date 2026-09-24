@@ -24,7 +24,7 @@ class KasTest extends TestCase
         $this->assertSame(300000.0, (float) $sendangsari->mutasi->where('tipe', 'masuk')->sum('jumlah'));
         $this->assertSame(50000.0, (float) $sendangsari->mutasi->where('tipe', 'keluar')->sum('jumlah'));
         $this->assertSame('iuran', KasMutasi::where('sumber', 'iuran')->value('sumber'));
-        $this->assertTrue($kas->every(fn(KasBumdes $cash): bool => $cash->bumdes !== null));
-        $this->assertTrue($kas->every(fn(KasBumdes $cash): bool => $cash->mutasi->every(fn(KasMutasi $mutation): bool => $mutation->kas !== null)));
+        $this->assertTrue($kas->every(fn (KasBumdes $cash): bool => $cash->bumdes !== null));
+        $this->assertTrue($kas->every(fn (KasBumdes $cash): bool => $cash->mutasi->every(fn (KasMutasi $mutation): bool => $mutation->kas !== null)));
     }
 }

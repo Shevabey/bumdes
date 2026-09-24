@@ -12,8 +12,11 @@ class Region extends Model
     use HasFactory;
 
     protected $table = 'region';
+
     protected $primaryKey = 'id_region';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [

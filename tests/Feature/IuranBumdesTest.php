@@ -27,6 +27,6 @@ class IuranBumdesTest extends TestCase
         $this->assertSame('luar_kas', $pending->sumber_dana);
         $this->assertSame('transfer', $pending->metode_bayar);
         $this->assertNotNull($pending->bukti_pembayaran_url);
-        $this->assertTrue($iuran->every(fn(IuranBumdes $contribution): bool => $contribution->bumdes !== null));
+        $this->assertTrue($iuran->every(fn (IuranBumdes $contribution): bool => $contribution->bumdes !== null));
     }
 }

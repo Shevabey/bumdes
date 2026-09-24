@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Livewire\Operasional\IuranPanel;
 use App\Http\Livewire\Operasional\PelangganManager;
+use App\Http\Livewire\Operasional\ReferralPanel;
 use App\Http\Livewire\Operasional\TagihanManager;
 use App\Http\Livewire\Operasional\TransaksiManager;
 use App\Http\Livewire\Operasional\UnitManager;
@@ -56,9 +57,11 @@ Route::middleware(['auth', 'account.active'])->group(function (): void {
             Route::get('/transaksi', TransaksiManager::class)->name('operasional.transaksi');
             Route::get('/tagihan', TagihanManager::class)->name('operasional.tagihan');
             Route::get('/iuran', IuranPanel::class)->name('operasional.iuran');
+            Route::get('/referral', ReferralPanel::class)->name('operasional.referral');
         });
 
     Route::get('/bumdes/iuran', fn () => redirect()->route('operasional.iuran'))->name('bumdes.iuran');
+    Route::get('/bumdes/referral', fn () => redirect()->route('operasional.referral'))->name('bumdes.referral');
 });
 
 Route::get('/', function () {
